@@ -126,6 +126,63 @@
                 width: calc(50% - 20px); /* 2 por fila */
             }
         }
+        /* --- ADAPTABILIDAD PARA MÓVILES --- */
+        @media (max-width: 768px) {
+            /* Ajuste de Navegación */
+            nav {
+                padding: 1rem 5%;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                display: none; /* Opcional: ocultar links en móvil o dejarlos en columna */
+            }
+
+            /* Ajuste de Hero y Secciones */
+            .hero h1 {
+                font-size: 2.5rem !important;
+            }
+
+            .container, section {
+                padding: 20px 5% !important;
+            }
+
+            /* Formularios y Modales */
+            .modal-content {
+                width: 95% !important;
+                margin: 10% auto;
+                padding: 20px !important;
+            }
+
+            /* Cuadrículas (Grids) a una sola columna */
+            .servicios-grid, .gallery-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Botones más grandes para dedos */
+            .btn-reservar, .btn-admin {
+                width: 100%;
+                text-align: center;
+                margin: 5px 0;
+            }
+
+            /* Tabla de Administración (Scroll lateral) */
+            .tabla-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px; /* Permite deslizar la tabla si es muy ancha */
+            }
+
+            /* Ajuste de la sección Consultar Citas */
+            .cita-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
     </style>
 </head>
 <body>
