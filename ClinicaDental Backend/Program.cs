@@ -3,40 +3,58 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. SERVICIOS
+// Configurar logs básicos para evitar el error de TypeLoadException
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Services.AddCors();
-builder.Services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.PropertyNameCaseInsensitive = true);
 builder.Services.AddSingleton<EmailService>();
 
 var app = builder.Build();
 
-// 2. CONFIGURACIÓN DE RED Y SEGURIDAD
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-// 3. BASE DE DATOS - Configuración con Volumen Persistente
-string dbDirectory = "/app/data"; 
-string dbPath;
-
-if (Directory.Exists(dbDirectory)) 
-{
-    dbPath = Path.Combine(dbDirectory, "clinicaWin.db");
-    
-    // TRUCO: Si el volumen está vacío, traemos la DB que viene con el código
-    if (!File.Exists(dbPath))
-    {
-        string dbOriginal = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
-        if (File.Exists(dbOriginal)) {
-            File.Copy(dbOriginal, dbPath);
-            Console.WriteLine("[INFO] DB copiada al volumen por primera vez.");
-        }
-    }
-}
-else 
-{
-    dbPath = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
-}
+// --- CONFIGURACIÓN DE BASE DE DATOS ---
+string dbDirectory = "/app/data";
+string dbPath = Path.Exists(dbDirectory) 
+    ? Path.Combine(dbDirectory, "clinicaWin.db") 
+    : Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
 
 string connectionString = $"Data Source={dbPath}";
+
+// Inicialización de emergencia: Crear tablas si el Volumen está vacío
+try {
+    using var conn = new SqliteConnection(connectionString);
+    await conn.OpenAsync();
+    var cmd = conn.CreateCommand();
+    cmd.CommandText = @"
+        CREATE TABLE IF NOT EXISTS Pacientes (PacienteID INTEGER PRIMARY KEY AUTOINCREMENT, Nombre TEXT, DNI TEXT UNIQUE, Telefono TEXT, Email TEXT);
+        CREATE TABLE IF NOT EXISTS Citas (CitaID INTEGER PRIMARY KEY AUTOINCREMENT, Motivo TEXT, Fecha TEXT, Hora TEXT, Estado TEXT);
+        CREATE TABLE IF NOT EXISTS AsignacionCitas (PacienteID INTEGER, CitaID INTEGER);";
+    await cmd.ExecuteNonQueryAsync();
+    Console.WriteLine($"[EXITO] DB inicializada en: {dbPath}");
+} catch (Exception ex) {
+    Console.WriteLine($"[ERROR CRÍTICO DB]: {ex.Message}");
+}
+
+// --- ENDPOINT VERIFICACIÓN CORREGIDO ---
+app.MapGet("/verificar-disponibilidad", async (string dia, string hora) => {
+    try {
+        using var conn = new SqliteConnection(connectionString);
+        await conn.OpenAsync();
+        var cmd = conn.CreateCommand();
+        // Usamos una consulta más limpia
+        cmd.CommandText = "SELECT COUNT(*) FROM Citas WHERE Fecha = @f AND Hora = @h AND Estado = 'Pendiente'";
+        cmd.Parameters.AddWithValue("@f", dia);
+        cmd.Parameters.AddWithValue("@h", hora);
+        
+        var count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
+        return Results.Ok(new { disponible = count == 0 });
+    } catch (Exception ex) {
+        Console.WriteLine($"Error en verificación: {ex.Message}");
+        return Results.Ok(new { disponible = true }); // En caso de error de DB, permitimos intentar agendar
+    }
+});
 // ---------------------------------------------------------
 // ENDPOINTS (MINIMAL APIS)
 // ---------------------------------------------------------
