@@ -1,20 +1,17 @@
 {
-  "name": "clinicadental-ia",
+  "name": "clinica-dental-ia",
   "version": "1.0.0",
-  "description": "",
+  "description": "Chatbot Winni para Win Salud Dental",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "axios": "^1.13.6",
-    "express": "^5.2.1",
-    "groq-sdk": "^1.1.2",
-    "ollama": "^0.6.3"
+    "express": "^4.21.2",
+    "groq-sdk": "^0.12.0",
+    "path": "^0.12.7"
   }
 }
