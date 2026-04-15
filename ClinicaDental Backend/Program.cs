@@ -17,20 +17,26 @@ app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 string dbDirectory = "/app/data"; 
 string dbPath;
 
-// Si existe la carpeta del Volumen (estamos en Railway)
 if (Directory.Exists(dbDirectory)) 
 {
     dbPath = Path.Combine(dbDirectory, "clinicaWin.db");
+    
+    // TRUCO: Si el volumen está vacío, traemos la DB que viene con el código
+    if (!File.Exists(dbPath))
+    {
+        string dbOriginal = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
+        if (File.Exists(dbOriginal)) {
+            File.Copy(dbOriginal, dbPath);
+            Console.WriteLine("[INFO] DB copiada al volumen por primera vez.");
+        }
+    }
 }
 else 
 {
-    // Si no existe (estamos en local/PC), usamos la carpeta del proyecto
     dbPath = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
 }
 
 string connectionString = $"Data Source={dbPath}";
-Console.WriteLine($"[INFO] Base de datos activa en: {dbPath}");
-
 // ---------------------------------------------------------
 // ENDPOINTS (MINIMAL APIS)
 // ---------------------------------------------------------
