@@ -11,9 +11,13 @@ builder.Services.AddSingleton<EmailService>();
 var app = builder.Build();
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-string rutaDB = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
-Console.WriteLine($"DEBUG: Buscando base de datos en: {rutaDB}");
-string connectionString = $"Data Source={rutaDB};Cache=Shared";
+// Esto buscará el archivo en la raíz (/app/clinicaWin.db)
+string connectionString = "Data Source=clinicaWin.db"; 
+
+// O si quieres mantener el Debug para estar seguro:
+string rutaDB = Path.Combine(Directory.GetCurrentDirectory(), "clinicaWin.db");
+Console.WriteLine($"DEBUG REAL: {rutaDB}");
+string connectionString = $"Data Source={rutaDB}";
 
 // ---------------------------------------------------------
 // VERIFICAR DISPONIBILIDAD (Modificado para Fecha y Hora)
