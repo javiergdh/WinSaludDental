@@ -395,56 +395,44 @@
         }
 
         async function buscarCitas() {
-            const dni = document.getElementById('dniConsulta').value;
+            // 1. Usamos el ID del input que tienes en tu HTML
+            const dni = document.getElementById('dniConsulta').value; 
             const resultado = document.getElementById('resultadoConsulta');
             
-            if (!dni) {
-                alert("Por favor, introduce tu DNI");
-                return;
-            }
-
-            resultado.innerHTML = '<p style="color: white;">Buscando...</p>';
+            if(!dni) return alert("Introduce el DNI para consultar.");
 
             try {
-                const respuesta = await fetch(`${API_URL}/consultar-citas/${dni}`);
-                const citas = await respuesta.json();
+                // 2. Llamada a tu API
+                const res = await fetch(`${API_URL}/consultar-citas/${dni}`);
+                const citas = await res.json();
 
-                resultado.innerHTML = '';
+                // 3. Renderizado de la lista
+                resultado.innerHTML = citas.length > 0 
+                    ? citas.map(c => {
+                        // ESTA ES LA MAGIA: 
+                        // Buscamos 'Fecha' o 'fecha' y 'Hora' o 'hora' para que no falle nunca
+                        const f = c.Fecha || c.fecha || c.dia || "---";
+                        const h = c.Hora || c.hora || c.horario || "---";
+                        const idCita = c.CitaID || c.id;
 
-                if (citas.length === 0) {
-                    resultado.innerHTML = '<p style="color: white;">No se encontraron citas pendientes para este DNI.</p>';
-                    return;
-                }
+                        return `
+                        <div style="border-bottom:1px solid #eee; padding:15px 0; display:flex; justify-content:space-between; align-items:center; background: white; margin-top: 5px; border-radius: 10px; padding-left: 10px;">
+                            <div>
+                                <strong style="color: #1a252f;">📅 ${f} a las ${h}</strong><br>
+                                <small style="color: #666;">${c.Motivo || c.motivo || "Consulta"}</small>
+                            </div>
+                            <button onclick="eliminarCita(${idCita})" 
+                                    style="background:var(--rojo-validación); color:white; border:none; padding:8px 12px; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:800; margin-right: 10px;">
+                                CANCELAR
+                            </button>
+                        </div>`;
+                    }).join('')
+                    : "<p style='color: white; text-align: center;'>No tienes citas pendientes.</p>";
 
-                citas.forEach(cita => {
-                    const div = document.createElement('div');
-                    div.className = 'cita-item';
-                    
-                    // --- ESTA ES LA PARTE CLAVE ---
-                    // Intentamos leer 'dia' o 'fecha' y 'horario' o 'hora' 
-                    // para que siempre salga el dato sin importar cómo lo mande la API
-                    const diaCita = cita.dia || cita.fecha || '---';
-                    const horaCita = cita.horario || cita.hora || '---';
-
-                    div.innerHTML = `
-                        <div style="display: flex; flex-direction: column; gap: 5px;">
-                            <span style="color: var(--oscuro); font-weight: 800; font-size: 1.1rem;">
-                                📅 ${diaCita}
-                            </span>
-                            <span style="color: var(--verde); font-weight: 800; font-size: 1.2rem;">
-                                🕒 ${horaCita}
-                            </span>
-                        </div>
-                        <button class="btn-cancelar" onclick="eliminarCita(${cita.id})">CANCELAR</button>
-                    `;
-                    resultado.appendChild(div);
-                });
-            } catch (error) {
-                console.error("Error al consultar:", error);
-                resultado.innerHTML = '<p style="color: white;">Error al conectar con el servidor.</p>';
+            } catch(e) { 
+                alert("Error al conectar con la base de datos."); 
             }
         }
-
         async function cancelarCita(idCita, dni) {
             if (!confirm("¿Seguro que quieres cancelar esta cita?")) return;
             try {
