@@ -14,27 +14,36 @@ var app = builder.Build();
 
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+
 // --- CONFIGURACIÓN DE BASE DE DATOS ---
 string dbDirectory = "/app/data";
-string dbPath = Path.Exists(dbDirectory) 
+string dbPath = Directory.Exists(dbDirectory) 
     ? Path.Combine(dbDirectory, "clinicaWin.db") 
     : Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
 
 string connectionString = $"Data Source={dbPath}";
 
-// Inicialización de emergencia: Crear tablas si el Volumen está vacío
+// ESTE BLOQUE ES EL QUE FALTA: Crea las tablas si el archivo está vacío
 try {
     using var conn = new SqliteConnection(connectionString);
     await conn.OpenAsync();
     var cmd = conn.CreateCommand();
     cmd.CommandText = @"
-        CREATE TABLE IF NOT EXISTS Pacientes (PacienteID INTEGER PRIMARY KEY AUTOINCREMENT, Nombre TEXT, DNI TEXT UNIQUE, Telefono TEXT, Email TEXT);
-        CREATE TABLE IF NOT EXISTS Citas (CitaID INTEGER PRIMARY KEY AUTOINCREMENT, Motivo TEXT, Fecha TEXT, Hora TEXT, Estado TEXT);
-        CREATE TABLE IF NOT EXISTS AsignacionCitas (PacienteID INTEGER, CitaID INTEGER);";
+        CREATE TABLE IF NOT EXISTS Pacientes (
+            PacienteID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Nombre TEXT, DNI TEXT UNIQUE, Telefono TEXT, Email TEXT
+        );
+        CREATE TABLE IF NOT EXISTS Citas (
+            CitaID INTEGER PRIMARY KEY AUTOINCREMENT,
+            Motivo TEXT, Fecha TEXT, Hora TEXT, Estado TEXT
+        );
+        CREATE TABLE IF NOT EXISTS AsignacionCitas (
+            PacienteID INTEGER, CitaID INTEGER
+        );";
     await cmd.ExecuteNonQueryAsync();
-    Console.WriteLine($"[EXITO] DB inicializada en: {dbPath}");
+    Console.WriteLine($"[EXITO] Tablas verificadas/creadas en: {dbPath}");
 } catch (Exception ex) {
-    Console.WriteLine($"[ERROR CRÍTICO DB]: {ex.Message}");
+    Console.WriteLine($"[ERROR AL CREAR TABLAS]: {ex.Message}");
 }
 
 // --- ENDPOINT VERIFICACIÓN CORREGIDO ---
