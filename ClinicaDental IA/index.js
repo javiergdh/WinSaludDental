@@ -78,5 +78,5 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log(`🚀 Winni operativa con reglas de Modelfile en puerto ${PORT}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Winni operativa en el puerto ${PORT}`));
