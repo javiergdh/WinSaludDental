@@ -138,12 +138,13 @@ app.MapGet("/consultar-citas/{dni}", async (string dni) => {
     cmd.Parameters.AddWithValue("@dni", dni);
     using var reader = await cmd.ExecuteReaderAsync();
     var citas = new List<object>();
+// Dentro de app.MapGet("/consultar-citas/{dni}", ...)
     while (await reader.ReadAsync()) {
         citas.Add(new { 
             id = reader.GetInt32(0), 
-            dia = reader.GetString(1),    // Cambiado de 'fecha' a 'dia'
-            horario = reader.GetString(2), // Cambiado de 'hora' a 'horario'
-            motivo = reader.GetString(3) 
+            Fecha = reader.GetString(1),  // Usamos 'Fecha' con Mayúscula
+            Hora = reader.GetString(2),   // Usamos 'Hora' con Mayúscula
+            Motivo = reader.GetString(3) 
         });
     }
     return Results.Ok(citas);

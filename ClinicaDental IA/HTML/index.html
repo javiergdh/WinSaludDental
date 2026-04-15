@@ -395,43 +395,38 @@
         }
 
         async function buscarCitas() {
-            // 1. Usamos 'g_dni' que es el ID que tiene tu input en la línea 242
-            const dni = document.getElementById('g_dni').value;
-            // 2. Usamos 'listaCitas' que es el ID donde se muestran los resultados (línea 245)
-            const lista = document.getElementById('listaCitas');
+            const dni = document.getElementById('g_dni').value; // El ID de tu input
+            const lista = document.getElementById('listaCitas'); // El ID de tu contenedor
             
             if(!dni) return alert("Introduce el DNI del tutor.");
             
-            lista.innerHTML = '<p style="color: white; text-align: center;">Buscando...</p>';
+            lista.innerHTML = '<p style="color: white;">Buscando...</p>';
 
             try {
-                // Usamos API_BBDD que es tu variable global (línea 271)
                 const res = await fetch(`${API_BBDD}/consultar-citas/${dni}`);
                 const citas = await res.json();
 
                 lista.innerHTML = citas.length > 0 
                     ? citas.map(c => {
-                        // Sincronizamos con los nombres que manda tu Program.cs (líneas 114-117)
-                        const f = c.fecha || "---"; 
-                        const h = c.hora || "---";
-                        const idCita = c.id;
+                        // Buscamos tanto en Mayúsculas como en minúsculas por seguridad
+                        const f = c.Fecha || c.fecha || "---";
+                        const h = c.Hora || c.hora || "---";
 
                         return `
-                        <div style="border-bottom:1px solid #eee; padding:10px 0; display:flex; justify-content:space-between; align-items:center; background: white; border-radius: 10px; margin-top: 5px; padding: 10px;">
+                        <div style="border-bottom:1px solid #eee; padding:10px; display:flex; justify-content:space-between; align-items:center; background: white; border-radius: 15px; margin-top: 10px;">
                             <div>
-                                <strong style="color: var(--oscuro);">📅 ${f} a las ${h}</strong><br>
-                                <small style="color: #666;">${c.motivo || "Consulta"}</small>
+                                <strong style="color: #1a252f;">📅 ${f} a las ${h}</strong><br>
+                                <small style="color: #666;">${c.Motivo || c.motivo || "Consulta"}</small>
                             </div>
-                            <button onclick="cancelarCita('${idCita}', '${dni}')" 
+                            <button onclick="cancelarCita('${c.id}', '${dni}')" 
                                     style="background:var(--rojo-validación); color:white; border:none; padding:8px 12px; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:800;">
                                 CANCELAR
                             </button>
                         </div>`;
                     }).join('')
-                    : "<p style='color: white; text-align: center;'>No tienes citas pendientes.</p>";
+                    : "<p style='color: white;'>No tienes citas pendientes.</p>";
             } catch(e) { 
-                console.error(e);
-                lista.innerHTML = "<p style='color: white; text-align: center;'>Error al conectar con la base de datos.</p>";
+                alert("Error al conectar con la base de datos."); 
             }
         }
         async function cancelarCita(idCita, dni) {
