@@ -81,8 +81,8 @@ app.post('/chat', async (req, res) => {
 });
 
 // En tu index.js de la IA
-const PORT = process.env.PORT || 3000; // Railway pasará el puerto dinámicamente
+const PORT = process.env.PORT || 3000; // Railway usará process.env.PORT
 
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Web servida en puerto ${PORT}`);
+    console.log(`Servidor funcionando en el puerto ${PORT}`);
 });

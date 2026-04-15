@@ -321,237 +321,245 @@
         <p style="margin-top: 40px; opacity: 0.8; font-size: 0.8rem;">© 2026 - Sonrisas para el futuro</p>
     </footer>
 
-    <script>
-        const API_BBDD = "https://api-production-0da0.up.railway.app";
-        const FESTIVOS = ["2026-01-01", "2026-01-06", "2026-05-01", "2026-10-12", "2026-12-25"];
-        const API_URL_CHAT = window.location.origin;
-        window.onload = () => {
-            const hoy = new Date().toISOString().split('T')[0];
-            const inputFecha = document.getElementById('f_dia');
-            if(inputFecha) inputFecha.setAttribute('min', hoy);
-            document.querySelectorAll('.form-input').forEach(input => {
-                input.addEventListener('input', () => validarInputRealTime(input));
-            });
-        };
+<script>
+    const API_BBDD = "https://api-production-0da0.up.railway.app";
+    const FESTIVOS = ["2026-01-01", "2026-01-06", "2026-05-01", "2026-10-12", "2026-12-25"];
+    const API_URL_CHAT = window.location.origin;
 
-        function validarInputRealTime(input) {
-            let esValido = false;
-            const valor = input.value.trim();
-            const contenedor = input.parentElement;
-            switch (input.id) {
-                case 'f_nombre': case 'f_motivo': esValido = valor.length >= 3; break;
-                case 'f_dni': esValido = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(valor); break;
-                case 'f_tel': esValido = /^\d{9}$/.test(valor); break;
-                case 'f_email': esValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor); break;
-                case 'f_dia': esValido = valor !== ""; break;
-                case 'f_hora': esValido = checkRestriccionesHora(valor); break;
-                default: esValido = valor !== "";
-            }
-            if (esValido) { contenedor.classList.add('valido'); input.classList.add('valido'); }
-            else { contenedor.classList.remove('valido'); input.classList.remove('valido'); }
-        }
-
-        function checkRestriccionesHora(horaStr) {
-            if (!horaStr) return false;
-            const [horas, minutos] = horaStr.split(':').map(Number);
-            if (minutos !== 0 && minutos !== 30) return false;
-            return ((horas >= 10 && horas < 14) || (horas >= 16 && horas < 20));
-        }
-
-        function validarFecha(input) {
-            const fecha = new Date(input.value);
-            const diaSemana = fecha.getUTCDay(); 
-            if (diaSemana === 0 || diaSemana === 6 || FESTIVOS.includes(input.value)) {
-                alert("La clínica está cerrada los fines de semana y festivos.");
-                input.value = "";
-                input.parentElement.classList.remove('valido');
-            } else { validarInputRealTime(input); }
-        }
-
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            win.style.display = (win.style.display === "none" || win.style.display === "") ? "flex" : "none";
-        }
-        function abrirForm() { document.getElementById('modalFormulario').style.display = 'block'; }
-        function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
-
-        // --- FUNCIÓN DEL CHATBOT CORREGIDA ---
-        async function enviarMensaje() {
-            const input = document.getElementById('chatInput');
-            const box = document.getElementById('chatBox');
-            const msg = input.value.trim();
-
-            if (!msg) return;
-
-            // 1. Mostrar mensaje del usuario
-            box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
-
-            try {
-                // Llamamos al endpoint /chat de tu servidor Node.js
-                const res = await fetch(`${API_URL_CHAT}/chat`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensaje: msg })
-                });
-
-                const data = await res.json();
-
-                // 2. Mostrar respuesta del bot
-                box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
-                box.scrollTop = box.scrollHeight;
-
-            } catch (e) {
-                console.error("Error en el chat:", e);
-                box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ El asistente no está disponible ahora.</div>`;
-            }
-        }
-
-        // Escuchar la tecla Enter
-        document.getElementById('chatInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') enviarMensaje();
+    window.onload = () => {
+        const hoy = new Date().toISOString().split('T')[0];
+        const inputFecha = document.getElementById('f_dia');
+        if(inputFecha) inputFecha.setAttribute('min', hoy);
+        
+        // Inicializar validación en tiempo real
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('input', () => validarInputRealTime(input));
         });
-        async function agendarCita() {
-            const form = document.getElementById('reservaForm');
-            const btn = document.getElementById('btnAgendar');
-            if (form.querySelectorAll('.form-input:not(.valido)').length > 0) {
-                return alert("Por favor, rellena todos los campos correctamente.");
-            }
-            const diaValue = document.getElementById('f_dia').value;
-            const horaValue = document.getElementById('f_hora').value;
-            btn.innerText = "PROCESANDO...";
-            btn.disabled = true;
+        
+        // Verificar red para botón admin
+        verificarRedYMostrarBoton();
+    };
 
-            try {
-                const resCheck = await fetch(`${API_BBDD}/verificar-disponibilidad?dia=${diaValue}&hora=${horaValue}`);
-                const disponibilidad = await resCheck.json();
-                if (!disponibilidad.disponible) {
-                    alert("Ese horario ya está ocupado.");
-                    btn.innerText = "CONFIRMAR CITA";
-                    btn.disabled = false;
-                    return;
-                }
-                const campos = {
-                    Nombre: document.getElementById('f_nombre').value,
-                    DNI: document.getElementById('f_dni').value,
-                    Telefono: document.getElementById('f_tel').value,
-                    Email: document.getElementById('f_email').value,
-                    Dia: diaValue,
-                    Horario: horaValue,
-                    Motivo: document.getElementById('f_motivo').value,
-                    Estado: "Pendiente"
-                };
-                const res = await fetch(`${API_BBDD}/agendar-cita`, { 
-                    method: 'POST', 
-                    headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify(campos) 
-                });
-                if(res.ok) { 
-                    alert("¡Cita agendada correctamente!"); 
-                    cerrarForm(); 
-                    form.reset(); 
-                    document.querySelectorAll('.input-container, .form-input').forEach(el => el.classList.remove('valido'));
-                } else {
-                    alert("Error al guardar la cita en el sistema.");
-                }
-            } catch(e) { 
-                alert("No se pudo conectar con el servidor. Asegúrate de que el programa de la clínica esté abierto."); 
-            } finally {
+    function validarInputRealTime(input) {
+        let esValido = false;
+        const valor = input.value.trim();
+        const contenedor = input.parentElement;
+        
+        switch (input.id) {
+            case 'f_nombre': case 'f_motivo': esValido = valor.length >= 3; break;
+            case 'f_dni': esValido = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(valor); break;
+            case 'f_tel': esValido = /^\d{9}$/.test(valor); break;
+            case 'f_email': esValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor); break;
+            case 'f_dia': esValido = valor !== ""; break;
+            case 'f_hora': esValido = checkRestriccionesHora(valor); break;
+            default: esValido = valor !== "";
+        }
+
+        if (esValido) { 
+            contenedor.classList.add('valido'); 
+            input.classList.add('valido'); 
+        } else { 
+            contenedor.classList.remove('valido'); 
+            input.classList.remove('valido'); 
+        }
+        return esValido;
+    }
+
+    function checkRestriccionesHora(horaStr) {
+        if (!horaStr) return false;
+        const [horas, minutos] = horaStr.split(':').map(Number);
+        if (minutos !== 0 && minutos !== 30) return false;
+        return ((horas >= 10 && horas < 14) || (horas >= 16 && horas < 20));
+    }
+
+    // Se debe llamar desde el onchange del input de fecha
+    function validarFecha(input) {
+        const fecha = new Date(input.value);
+        // getUTCDay evita problemas de zona horaria: 0=Dom, 6=Sab
+        const diaSemana = fecha.getUTCDay(); 
+        
+        if (diaSemana === 0 || diaSemana === 6 || FESTIVOS.includes(input.value)) {
+            alert("La clínica está cerrada los fines de semana y festivos. Por favor, elige un día de lunes a viernes.");
+            input.value = "";
+            input.parentElement.classList.remove('valido');
+        } else { 
+            validarInputRealTime(input); 
+        }
+    }
+
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        win.style.display = (win.style.display === "none" || win.style.display === "") ? "flex" : "none";
+    }
+
+    function abrirForm() { document.getElementById('modalFormulario').style.display = 'block'; }
+    function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
+
+    async function enviarMensaje() {
+        const input = document.getElementById('chatInput');
+        const box = document.getElementById('chatBox');
+        const msg = input.value.trim();
+
+        if (!msg) return;
+
+        // Mostrar mensaje usuario
+        box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
+        input.value = '';
+        
+        // Feedback de "escribiendo..."
+        const loadingId = "loading-" + Date.now();
+        box.innerHTML += `<div id="${loadingId}" style="text-align:left; margin:10px;"><span style="background:#eee; color:#999; padding:10px 15px; border-radius:20px; display:inline-block;">Winni está escribiendo...</span></div>`;
+        box.scrollTop = box.scrollHeight;
+
+        try {
+            const res = await fetch(`${API_BBDD}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mensaje: msg })
+            });
+            const data = await res.json();
+            
+            document.getElementById(loadingId).remove();
+            box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
+        } catch (e) {
+            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
+            box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ Error de conexión.</div>`;
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async function agendarCita() {
+        const form = document.getElementById('reservaForm');
+        const btn = document.getElementById('btnAgendar');
+        
+        // Validar todos antes de enviar
+        let formValido = true;
+        form.querySelectorAll('.form-input').forEach(input => {
+            if(!validarInputRealTime(input)) formValido = false;
+        });
+
+        if (!formValido) return alert("Por favor, rellena todos los campos correctamente.");
+
+        const diaValue = document.getElementById('f_dia').value;
+        const horaValue = document.getElementById('f_hora').value;
+        
+        btn.innerText = "⏳ VERIFICANDO...";
+        btn.disabled = true;
+
+        try {
+            const resCheck = await fetch(`${API_BBDD}/verificar-disponibilidad?dia=${diaValue}&hora=${horaValue}`);
+            const disponibilidad = await resCheck.json();
+            
+            if (!disponibilidad.disponible) {
+                alert("Lo sentimos, ese horario ya ha sido reservado. Por favor elige otro.");
                 btn.innerText = "CONFIRMAR CITA";
                 btn.disabled = false;
+                return;
             }
-        }
 
-        async function buscarCitas() {
-            const dni = document.getElementById('g_dni').value; // El ID de tu input
-            const lista = document.getElementById('listaCitas'); // El ID de tu contenedor
-            
-            if(!dni) return alert("Introduce el DNI del tutor.");
-            
-            lista.innerHTML = '<p style="color: white;">Buscando...</p>';
+            const campos = {
+                Nombre: document.getElementById('f_nombre').value,
+                DNI: document.getElementById('f_dni').value,
+                Telefono: document.getElementById('f_tel').value,
+                Email: document.getElementById('f_email').value,
+                Dia: diaValue,
+                Horario: horaValue,
+                Motivo: document.getElementById('f_motivo').value,
+                Estado: "Pendiente"
+            };
 
-            try {
-                const res = await fetch(`${API_BBDD}/consultar-citas/${dni}`);
-                const citas = await res.json();
+            const res = await fetch(`${API_BBDD}/agendar-cita`, { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(campos) 
+            });
 
-                lista.innerHTML = citas.length > 0 
-                    ? citas.map(c => {
-                        // Buscamos tanto en Mayúsculas como en minúsculas por seguridad
-                        const f = c.Fecha || c.fecha || "---";
-                        const h = c.Hora || c.hora || "---";
-
-                        return `
-                        <div style="border-bottom:1px solid #eee; padding:10px; display:flex; justify-content:space-between; align-items:center; background: white; border-radius: 15px; margin-top: 10px;">
-                            <div>
-                                <strong style="color: #1a252f;">📅 ${f} a las ${h}</strong><br>
-                                <small style="color: #666;">${c.Motivo || c.motivo || "Consulta"}</small>
-                            </div>
-                            <button onclick="cancelarCita('${c.id}', '${dni}')" 
-                                    style="background:var(--rojo-validación); color:white; border:none; padding:8px 12px; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:800;">
-                                CANCELAR
-                            </button>
-                        </div>`;
-                    }).join('')
-                    : "<p style='color: white;'>No tienes citas pendientes.</p>";
-            } catch(e) { 
-                alert("Error al conectar con la base de datos."); 
+            if(res.ok) { 
+                alert("¡Genial! Cita agendada. Nos vemos pronto."); 
+                cerrarForm(); 
+                form.reset(); 
+                document.querySelectorAll('.valido').forEach(el => el.classList.remove('valido'));
             }
+        } catch(e) { 
+            alert("Error de conexión con el servidor de la clínica."); 
+        } finally {
+            btn.innerText = "CONFIRMAR CITA";
+            btn.disabled = false;
         }
-        async function cancelarCita(idCita, dni) {
-            if (!confirm("¿Seguro que quieres cancelar esta cita?")) return;
-            try {
-                const res = await fetch(`${API_BBDD}/eliminar-cita/${idCita}`, { method: 'DELETE' });
-                if (res.ok) {
-                    alert("Cita cancelada correctamente.");
-                    buscarCitas();
-                } else {
-                    alert("No se pudo cancelar la cita.");
-                }
-            } catch (e) {
-                alert("Error de conexión al intentar cancelar.");
+    }
+
+    async function buscarCitas() {
+        const dni = document.getElementById('g_dni').value;
+        const lista = document.getElementById('listaCitas');
+        if(!dni) return alert("Introduce el DNI para buscar tus citas.");
+        
+        lista.innerHTML = '<p style="color: white; text-align:center;">🔍 Buscando...</p>';
+
+        try {
+            const res = await fetch(`${API_BBDD}/consultar-citas/${dni}`);
+            const citas = await res.json();
+
+            lista.innerHTML = citas.length > 0 
+                ? citas.map(c => `
+                    <div style="border-bottom:1px solid #eee; padding:15px; display:flex; justify-content:space-between; align-items:center; background: white; border-radius: 15px; margin-bottom: 10px;">
+                        <div>
+                            <strong style="color: #1a252f; display:block;">📅 ${c.Fecha || c.fecha}</strong>
+                            <span style="color: var(--verde); font-weight:800;">⏰ ${c.Hora || c.hora}</span><br>
+                            <small style="color: #666;">Motivo: ${c.Motivo || c.motivo}</small>
+                        </div>
+                        <button onclick="cancelarCita('${c.id || c.CitaID}', '${dni}')" 
+                                style="background:var(--rojo-validación); color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-weight:800;">
+                            ❌
+                        </button>
+                    </div>`).join('')
+                : "<p style='color: white; text-align:center;'>No tienes citas pendientes con este DNI.</p>";
+        } catch(e) { 
+            lista.innerHTML = "<p style='color: white;'>Error al consultar.</p>";
+        }
+    }
+
+    async function cancelarCita(idCita, dni) {
+        if (!confirm("¿Deseas cancelar esta cita?")) return;
+        try {
+            const res = await fetch(`${API_BBDD}/eliminar-cita/${idCita}`, { method: 'DELETE' });
+            if (res.ok) {
+                alert("Cita cancelada.");
+                buscarCitas();
             }
+        } catch (e) { alert("Error al cancelar."); }
+    }
+
+    function validarAdmin() {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === 'admin123') {
+            window.location.href = 'administracion.html';
+        } else {
+            alert("Acceso denegado.");
+            document.getElementById('adminPass').value = '';
         }
+    }
 
-        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
-        function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; document.getElementById('adminPass').value = ''; }
-
-        function validarAdmin() {
-            const pass = document.getElementById('adminPass').value;
-            if (pass === 'admin123') {
-                window.location.href = 'administracion.html';
-            } else {
-                alert("Contraseña incorrecta. Solo personal autorizado.");
-                document.getElementById('adminPass').value = '';
-            }
-        }
-
-        window.onclick = function(event) {
-            const modalCita = document.getElementById('modalFormulario');
-            const modalAdmin = document.getElementById('modalAdmin');
-            if (event.target == modalCita) cerrarForm();
-            if (event.target == modalAdmin) cerrarAdmin();
-        }
-
+    async function verificarRedYMostrarBoton() {
         const IP_CLINICA = "92.176.183.12";
-        if (datos.ip === IP_CLINICA) {
-            miBotonAdmin.style.display = 'inline-block';
-        }
-        async function verificarRedYMostrarBoton() {
-            try {
-                const respuesta = await fetch('https://api.ipify.org?format=json');
-                const datos = await respuesta.json();
-                const miBotonAdmin = document.querySelector('.btn-admin');
-                if (datos.ip === IP_CLINICA) {
-                    miBotonAdmin.style.display = 'inline-block';
-                } else {
-                    miBotonAdmin.style.display = 'none';
-                }
-            } catch (error) {
-                console.log("No se pudo verificar la red, el botón permanecerá oculto.");
+        try {
+            const respuesta = await fetch('https://api.ipify.org?format=json');
+            const datos = await respuesta.json();
+            const miBotonAdmin = document.querySelector('.btn-admin');
+            if (miBotonAdmin) {
+                miBotonAdmin.style.display = (datos.ip === IP_CLINICA) ? 'inline-block' : 'none';
             }
+        } catch (error) {
+            console.log("Modo remoto: Botón admin oculto.");
         }
-        verificarRedYMostrarBoton();
-    </script>
+    }
+
+    // Cerrar modales al hacer clic fuera
+    window.onclick = (event) => {
+        if (event.target.className === 'modal') {
+            cerrarForm();
+            cerrarAdmin();
+        }
+    }
+</script>
 </body>
 </html>
