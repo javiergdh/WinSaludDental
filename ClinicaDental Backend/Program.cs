@@ -13,11 +13,23 @@ var app = builder.Build();
 // 2. CONFIGURACIÓN DE RED Y SEGURIDAD
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-// 3. BASE DE DATOS - Ruta simplificada para evitar el error de /app/out/
-string dbPath = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
-string connectionString = $"Data Source={dbPath}";
+// 3. BASE DE DATOS - Configuración con Volumen Persistente
+string dbDirectory = "/app/data"; 
+string dbPath;
 
-Console.WriteLine($"[INFO] Base de datos en: {dbPath}");
+// Si existe la carpeta del Volumen (estamos en Railway)
+if (Directory.Exists(dbDirectory)) 
+{
+    dbPath = Path.Combine(dbDirectory, "clinicaWin.db");
+}
+else 
+{
+    // Si no existe (estamos en local/PC), usamos la carpeta del proyecto
+    dbPath = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
+}
+
+string connectionString = $"Data Source={dbPath}";
+Console.WriteLine($"[INFO] Base de datos activa en: {dbPath}");
 
 // ---------------------------------------------------------
 // ENDPOINTS (MINIMAL APIS)
