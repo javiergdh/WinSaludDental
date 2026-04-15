@@ -15,7 +15,7 @@ var app = builder.Build();
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 
-// --- CONFIGURACIÓN DE BASE DE DATOS ---
+// --- CONFIGURACIÓN DE BASE DE DATOS REPARADORA ---
 string dbDirectory = "/app/data";
 string dbPath = Directory.Exists(dbDirectory) 
     ? Path.Combine(dbDirectory, "clinicaWin.db") 
@@ -23,11 +23,13 @@ string dbPath = Directory.Exists(dbDirectory)
 
 string connectionString = $"Data Source={dbPath}";
 
-// ESTE BLOQUE ES EL QUE FALTA: Crea las tablas si el archivo está vacío
+// Intentamos crear las tablas. Si ya existen, no pasará nada.
 try {
     using var conn = new SqliteConnection(connectionString);
     await conn.OpenAsync();
     var cmd = conn.CreateCommand();
+    
+    // Ejecutamos la creación de las 3 tablas necesarias
     cmd.CommandText = @"
         CREATE TABLE IF NOT EXISTS Pacientes (
             PacienteID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,12 +42,13 @@ try {
         CREATE TABLE IF NOT EXISTS AsignacionCitas (
             PacienteID INTEGER, CitaID INTEGER
         );";
+    
     await cmd.ExecuteNonQueryAsync();
-    Console.WriteLine($"[EXITO] Tablas verificadas/creadas en: {dbPath}");
+    Console.WriteLine($"[LOG] Base de datos verificada correctamente en: {dbPath}");
 } catch (Exception ex) {
-    Console.WriteLine($"[ERROR AL CREAR TABLAS]: {ex.Message}");
+    // Si hay un error, lo imprimimos para verlo en el log de Railway
+    Console.WriteLine($"[LOG ERROR] No se pudieron crear las tablas: {ex.Message}");
 }
-
 // --- ENDPOINT VERIFICACIÓN CORREGIDO ---
 app.MapGet("/verificar-disponibilidad", async (string dia, string hora) => {
     try {
