@@ -375,20 +375,22 @@
         function abrirForm() { document.getElementById('modalFormulario').style.display = 'block'; }
         function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
 
-// Reemplaza tu función enviarMensaje actual por esta:
+        // --- FUNCIÓN DEL CHATBOT CORREGIDA ---
         async function enviarMensaje() {
-            const input = document.getElementById('userInput'); // Antes decía chatInput
-            const box = document.getElementById('chatlog');    // Antes decía chatBox
+            const input = document.getElementById('chatInput');
+            const box = document.getElementById('chatBox');
+            
+            if (!input || !box) return;
             const msg = input.value.trim();
-
             if (!msg) return;
 
-            // 1. Mostrar tu mensaje
+            // Mostrar mensaje usuario
             box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
 
             try {
+                // Usamos API_BBDD que es la que tienes definida arriba
                 const res = await fetch(`${API_BBDD}/chat`, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -397,15 +399,20 @@
 
                 const data = await res.json();
 
-                // 2. Mostrar respuesta de la IA (Asegúrate de que el backend envía .respuesta)
+                // Mostrar respuesta bot
                 box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
                 box.scrollTop = box.scrollHeight;
 
             } catch (e) {
-                console.error("Error:", e);
-                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">Asistente no disponible en este momento.</div>`;
+                console.error("Error en el chat:", e);
+                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">Asistente no disponible.</div>`;
             }
         }
+
+        // Escuchar la tecla Enter
+        document.getElementById('chatInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') enviarMensaje();
+        });
         async function agendarCita() {
             const form = document.getElementById('reservaForm');
             const btn = document.getElementById('btnAgendar');
