@@ -8,7 +8,21 @@ builder.Services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.PropertyN
 
 builder.Services.AddSingleton<EmailService>();
 
-var app = builder.Build();
+var app = builder.Build();;
+
+// Configuración para usar tu carpeta "HTML"
+app.UseDefaultFiles(new DefaultFilesOptions {
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "HTML")),
+    RequestPath = ""
+});
+
+app.UseStaticFiles(new StaticFileOptions {
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "HTML")),
+    RequestPath = ""
+});
+
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
 string connectionString = $"Data Source={Path.Combine(Directory.GetCurrentDirectory(), "clinicaWin.db")}";
@@ -228,6 +242,7 @@ app.MapPost("/gestionar-cita-admin", async (int citaId, string nuevoEstado, Emai
 
 app.MapGet("/health", () => Results.Ok("Servidor funcionando"));
 
-app.Run("http://localhost:5286");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5286";
+app.Run($"http://0.0.0.0:{port}");
 
 public record CitaRequest(string Nombre, string DNI, string Telefono, string Email, string Dia, string Horario, string Motivo);
