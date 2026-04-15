@@ -11,7 +11,9 @@ builder.Services.AddSingleton<EmailService>();
 var app = builder.Build();
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-string connectionString = $"Data Source={Path.Combine(AppContext.BaseDirectory, "clinicaWin.db")}";
+string rutaDB = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
+Console.WriteLine($"DEBUG: Buscando base de datos en: {rutaDB}");
+string connectionString = $"Data Source={rutaDB};Cache=Shared";
 
 // ---------------------------------------------------------
 // VERIFICAR DISPONIBILIDAD (Modificado para Fecha y Hora)
