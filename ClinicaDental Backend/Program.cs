@@ -11,13 +11,16 @@ builder.Services.AddSingleton<EmailService>();
 var app = builder.Build();
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-// Esto buscará el archivo en la raíz (/app/clinicaWin.db)
-string connectionString = "Data Source=clinicaWin.db"; 
 
-// O si quieres mantener el Debug para estar seguro:
-string rutaDB = Path.Combine(Directory.GetCurrentDirectory(), "clinicaWin.db");
+// Define la ruta (esta es la buena que vimos en los logs)
+string rutaDB = Path.Combine(AppContext.BaseDirectory, "clinicaWin.db");
 Console.WriteLine($"DEBUG REAL: {rutaDB}");
-string connectionString = $"Data Source={rutaDB}";
+
+// USA ESTA LÍNEA SOLO UNA VEZ (Borra cualquier otro 'string connectionString' que tengas)
+string connectionString = $"Data Source={rutaDB}"; 
+
+// Luego ya usas la variable en tu DbContext o donde toque:
+// builder.Services.AddSqlite<TuDbContext>(connectionString);
 
 // ---------------------------------------------------------
 // VERIFICAR DISPONIBILIDAD (Modificado para Fecha y Hora)
