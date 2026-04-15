@@ -11,7 +11,7 @@ builder.Services.AddSingleton<EmailService>();
 var app = builder.Build();
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-string connectionString = $"Data Source={Path.Combine(Directory.GetCurrentDirectory(), "clinicaWin.db")}";
+string connectionString = $"Data Source={Path.Combine(AppContext.BaseDirectory, "clinicaWin.db")}";
 
 // ---------------------------------------------------------
 // VERIFICAR DISPONIBILIDAD (Modificado para Fecha y Hora)
