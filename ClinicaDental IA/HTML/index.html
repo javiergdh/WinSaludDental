@@ -375,9 +375,10 @@
         function abrirForm() { document.getElementById('modalFormulario').style.display = 'block'; }
         function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
 
+// Reemplaza tu función enviarMensaje actual por esta:
         async function enviarMensaje() {
-            const input = document.getElementById('chatInput');
-            const box = document.getElementById('chatBox');
+            const input = document.getElementById('userInput'); // Antes decía chatInput
+            const box = document.getElementById('chatlog');    // Antes decía chatBox
             const msg = input.value.trim();
 
             if (!msg) return;
@@ -388,8 +389,6 @@
             box.scrollTop = box.scrollHeight;
 
             try {
-                // USAMOS API_BBDD que es tu variable
-                // Y añadimos /chat que es el endpoint de tu index.js
                 const res = await fetch(`${API_BBDD}/chat`, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -398,13 +397,13 @@
 
                 const data = await res.json();
 
-                // 2. Mostrar respuesta de la IA
+                // 2. Mostrar respuesta de la IA (Asegúrate de que el backend envía .respuesta)
                 box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
                 box.scrollTop = box.scrollHeight;
 
             } catch (e) {
                 console.error("Error:", e);
-                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">Asistente no disponible.</div>`;
+                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">Asistente no disponible en este momento.</div>`;
             }
         }
         async function agendarCita() {
