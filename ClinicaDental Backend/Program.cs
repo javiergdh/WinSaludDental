@@ -53,7 +53,8 @@ try {
 // ---------------------------------------------------------
 // ENDPOINTS (MINIMAL APIS)
 // ---------------------------------------------------------
-
+// Endpoint de salud para que Railway no apague la app
+app.MapGet("/", () => Results.Ok("API Operativa"));
 // --- ENDPOINT VERIFICACIÓN CORREGIDO ---
 app.MapGet("/verificar-disponibilidad", async (string dia, string hora) => {
     try {
