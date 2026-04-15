@@ -78,5 +78,9 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Winni operativa en el puerto ${PORT}`));
+// En tu index.js de la IA
+const PORT = process.env.PORT || 3000; // Railway pasará el puerto dinámicamente
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Web servida en puerto ${PORT}`);
+});
