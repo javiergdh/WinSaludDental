@@ -324,7 +324,7 @@
     <script>
         const API_BBDD = "https://api-production-0da0.up.railway.app";
         const FESTIVOS = ["2026-01-01", "2026-01-06", "2026-05-01", "2026-10-12", "2026-12-25"];
-
+        const API_URL_CHAT = window.location.origin;
         window.onload = () => {
             const hoy = new Date().toISOString().split('T')[0];
             const inputFecha = document.getElementById('f_dia');
@@ -379,33 +379,32 @@
         async function enviarMensaje() {
             const input = document.getElementById('chatInput');
             const box = document.getElementById('chatBox');
-            
-            if (!input || !box) return;
             const msg = input.value.trim();
+
             if (!msg) return;
 
-            // Mostrar mensaje usuario
+            // 1. Mostrar mensaje del usuario
             box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
             input.value = '';
             box.scrollTop = box.scrollHeight;
 
             try {
-                // Usamos API_BBDD que es la que tienes definida arriba
-                const res = await fetch(`${API_BBDD}/chat`, { 
+                // Llamamos al endpoint /chat de tu servidor Node.js
+                const res = await fetch(`${API_URL_CHAT}/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ mensaje: msg }) 
+                    body: JSON.stringify({ mensaje: msg })
                 });
 
                 const data = await res.json();
 
-                // Mostrar respuesta bot
+                // 2. Mostrar respuesta del bot
                 box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
                 box.scrollTop = box.scrollHeight;
 
             } catch (e) {
                 console.error("Error en el chat:", e);
-                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">Asistente no disponible.</div>`;
+                box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ El asistente no está disponible ahora.</div>`;
             }
         }
 
@@ -535,6 +534,9 @@
         }
 
         const IP_CLINICA = "92.176.183.12";
+        if (datos.ip === IP_CLINICA) {
+            miBotonAdmin.style.display = 'inline-block';
+        }
         async function verificarRedYMostrarBoton() {
             try {
                 const respuesta = await fetch('https://api.ipify.org?format=json');
