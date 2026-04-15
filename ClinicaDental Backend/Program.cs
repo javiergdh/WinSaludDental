@@ -49,24 +49,7 @@ try {
     // Si hay un error, lo imprimimos para verlo en el log de Railway
     Console.WriteLine($"[LOG ERROR] No se pudieron crear las tablas: {ex.Message}");
 }
-// --- ENDPOINT VERIFICACIÓN CORREGIDO ---
-app.MapGet("/verificar-disponibilidad", async (string dia, string hora) => {
-    try {
-        using var conn = new SqliteConnection(connectionString);
-        await conn.OpenAsync();
-        var cmd = conn.CreateCommand();
-        // Usamos una consulta más limpia
-        cmd.CommandText = "SELECT COUNT(*) FROM Citas WHERE Fecha = @f AND Hora = @h AND Estado = 'Pendiente'";
-        cmd.Parameters.AddWithValue("@f", dia);
-        cmd.Parameters.AddWithValue("@h", hora);
-        
-        var count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
-        return Results.Ok(new { disponible = count == 0 });
-    } catch (Exception ex) {
-        Console.WriteLine($"Error en verificación: {ex.Message}");
-        return Results.Ok(new { disponible = true }); // En caso de error de DB, permitimos intentar agendar
-    }
-});
+
 // ---------------------------------------------------------
 // ENDPOINTS (MINIMAL APIS)
 // ---------------------------------------------------------
