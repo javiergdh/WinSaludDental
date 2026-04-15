@@ -5,4 +5,4 @@ nixPkgs = ["dotnet-sdk"]
 cmds = ["dotnet restore", "dotnet publish -c Release -o out"]
 
 [start]
-cmd = "dotnet out/ClinicaDental_Backend.dll --urls=http://0.0.0.0:$PORT"
+cmd = "dotnet \"out/ClinicaDental Backend.dll\" --urls=http://0.0.0.0:$PORT"
