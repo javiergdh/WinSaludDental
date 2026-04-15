@@ -297,7 +297,7 @@
             </div>
             <div style="padding:15px; border-top:2px solid var(--verde-claro); display:flex; gap:10px;">
                 <input type="text" id="userInput" placeholder="Escribe aquí..." style="flex:1; border:none; outline:none;" onkeypress="if(event.key==='Enter') enviarMensaje()">
-                <button onclick="enviarMensaje()" style="background:var(--verde); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;">➔</button>
+                <button onclick="enviarMensaje()" style="background:var(--verde); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;">ENVIAR</button>
             </div>
         </div>
         <div id="chat-button" onclick="toggleChat()"><span style="font-size:30px;">🦁</span></div>
@@ -376,41 +376,60 @@
         function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
 
         async function enviarMensaje() {
+            // 1. Localizamos los elementos (usando los IDs exactos de tu HTML)
             const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
             const box = document.getElementById('chatBox');
+            
+            // 2. Verificamos que existan para que no se pare el código
+            if (!input || !box) {
+                console.error("No se encuentran los elementos del chat (chatInput o chatBox)");
+                return;
+            }
 
+            const msg = input.value.trim();
             if (!msg) return;
 
-            // 1. Mostrar mensaje del usuario
-            box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block; max-width:80%;">${msg}</span></div>`;
-            input.value = '';
-            box.scrollTop = box.scrollHeight;
+            // 3. Pintamos el mensaje del usuario
+            box.innerHTML += `
+                <div style="text-align:right; margin:10px;">
+                    <span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block; max-width:80%; font-weight:500;">
+                        ${msg}
+                    </span>
+                </div>`;
+            
+            input.value = ''; // Limpiamos el input
+            box.scrollTop = box.scrollHeight; // Scroll al final
 
             try {
-                // 2. Llamada al servidor de Node (index.js)
-                // Usamos /chat porque es la ruta que tienes en app.post('/chat')
-                const res = await fetch(`${API_URL}/chat`, { 
+                // 4. Llamada al servidor (Asegúrate de que API_URL es la de Node.js)
+                const res = await fetch(`${API_BBDD}/chat`, { 
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mensaje: msg }) 
                 });
-                
+
+                if (!res.ok) throw new Error("Error en el servidor");
+
                 const data = await res.json();
 
-                // 3. Mostrar respuesta del bot
-                box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block; max-width:80%; border-bottom-left-radius:0;">${data.respuesta}</span></div>`;
+                // 5. Pintamos la respuesta de la IA
+                box.innerHTML += `
+                    <div style="text-align:left; margin:10px;">
+                        <span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block; max-width:80%; border-bottom-left-radius:0;">
+                            ${data.respuesta}
+                        </span>
+                    </div>`;
+                
                 box.scrollTop = box.scrollHeight;
 
             } catch (e) {
-                box.innerHTML += `<div style="text-align:left; margin:10px; color:red;">⚠️ Error: El asistente no responde.</div>`;
+                console.error("Error en el chat:", e);
+                box.innerHTML += `
+                    <div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">
+                        ⚠️ El asistente no está disponible ahora mismo.
+                    </div>`;
             }
         }
-        document.getElementById('chatInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                enviarMensaje();
-            }
-        });
 
         async function agendarCita() {
             const form = document.getElementById('reservaForm');
