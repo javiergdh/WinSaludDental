@@ -6,7 +6,7 @@ const app = express();
 
 // Configuración de Groq - Asegúrate de tener la variable de entorno en Railway
 const groq = new Groq({ 
-    apiKey: process.env.GROQ_API_KEY || 'TU_API_KEY_POR_SI_PRUEBAS_EN_LOCAL' 
+    apiKey: process.env.GROQ_API_KEY 
 }); 
 
 app.use(express.json());
@@ -45,7 +45,7 @@ app.post('/chat', async (req, res) => {
 
         const chatRes = await groq.chat.completions.create({
             messages: historialConversacion,
-            model: "llama3-8b-8192", 
+            model: "llama-3.3-70b-versatile", 
             temperature: 0.2 // Un poco más bajo para evitar que se invente horarios
         });
 
