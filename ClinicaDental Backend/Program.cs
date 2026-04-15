@@ -79,6 +79,7 @@ app.MapPost("/agendar-cita", async (CitaRequest request, EmailService emailServi
     await conn.OpenAsync();
     using var trans = conn.BeginTransaction();
     try {
+        // 1. Guardar o actualizar datos del Paciente
         var cmdPac = conn.CreateCommand();
         cmdPac.CommandText = @"
             INSERT INTO Pacientes (Nombre, DNI, Telefono, Email) 
@@ -87,10 +88,11 @@ app.MapPost("/agendar-cita", async (CitaRequest request, EmailService emailServi
             SELECT PacienteID FROM Pacientes WHERE DNI=@d;";
         cmdPac.Parameters.AddWithValue("@n", request.Nombre);
         cmdPac.Parameters.AddWithValue("@d", request.DNI);
-        cmdPac.Parameters.AddWithValue("@t", request.Telefono);
+        cmdPac.Parameters.AddWithValue("@t", request.Telefono); // Verifica que en JS envíes 'Telefono'
         cmdPac.Parameters.AddWithValue("@e", request.Email);
         int pId = Convert.ToInt32(await cmdPac.ExecuteScalarAsync());
 
+        // 2. Insertar la Cita
         var cmdCita = conn.CreateCommand();
         cmdCita.CommandText = "INSERT INTO Citas (Motivo, Fecha, Hora, Estado) VALUES (@m, @f, @h, 'Pendiente'); SELECT last_insert_rowid();";
         cmdCita.Parameters.AddWithValue("@m", request.Motivo);
@@ -98,15 +100,31 @@ app.MapPost("/agendar-cita", async (CitaRequest request, EmailService emailServi
         cmdCita.Parameters.AddWithValue("@h", request.Horario);
         int cId = Convert.ToInt32(await cmdCita.ExecuteScalarAsync());
 
+        // 3. Vincular Paciente y Cita
         var cmdVin = conn.CreateCommand();
         cmdVin.CommandText = "INSERT INTO AsignacionCitas (PacienteID, CitaID) VALUES (@p, @c);";
         cmdVin.Parameters.AddWithValue("@p", pId);
         cmdVin.Parameters.AddWithValue("@c", cId);
         await cmdVin.ExecuteNonQueryAsync();
 
+        // 4. FINALIZAR TRANSACCIÓN (Guardado físico en el volumen)
         trans.Commit();
-        await emailService.EnviarConfirmacionCita(request.Email, request.Nombre, request.Dia, request.Horario);
-        return Results.Ok();
+
+        // 5. ENVÍO DE EMAIL EN SEGUNDO PLANO
+        // Lo ponemos aquí para que, si el servidor de correo tarda, la web no espere.
+        _ = Task.Run(async () => {
+            try {
+                // Usamos los mismos datos que guardamos en la BD
+                await emailService.EnviarConfirmacionCita(request.Email, request.Nombre, request.Dia, request.Horario);
+            } catch (Exception ex) {
+                // Si falla el mail, lo vemos en el log de Railway pero no bloqueamos al usuario
+                Console.WriteLine($"[ERROR MAIL] No se envió a {request.Email}: {ex.Message}");
+            }
+        });
+
+        // 6. RESPUESTA INMEDIATA A LA WEB
+        return Results.Ok(new { mensaje = "Cita agendada correctamente" });
+
     } catch (Exception ex) { 
         trans.Rollback(); 
         return Results.BadRequest($"Error al guardar: {ex.Message}"); 

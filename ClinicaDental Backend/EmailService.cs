@@ -105,9 +105,15 @@ public class EmailService
     // Método auxiliar para no repetir código de conexión
     private async Task EnviarCorreoAsync(MimeMessage mensaje) {
         using var client = new SmtpClient();
-        await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
-        await client.AuthenticateAsync(_emailEmisor, _passwordApp);
-        await client.SendAsync(mensaje);
-        await client.DisconnectAsync(true);
+        try {
+            await client.ConnectAsync("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(_emailEmisor, _passwordApp);
+            await client.SendAsync(mensaje);
+        } catch (Exception ex) {
+            // Esto evita que la app explote si falla el mail
+            Console.WriteLine($"[SMTP ERROR] {ex.Message}");
+        } finally {
+            await client.DisconnectAsync(true);
+        }
     }
 }
