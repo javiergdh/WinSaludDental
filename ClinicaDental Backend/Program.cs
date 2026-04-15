@@ -226,8 +226,9 @@ app.MapPost("/gestionar-cita-admin", async (int citaId, string nuevoEstado, Emai
     return Results.Ok(new { mensaje = $"Cita marcada como {nuevoEstado}" });
 });
 
-app.MapGet("/health", () => Results.Ok("Servidor funcionando"));
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 
-app.Run("http://localhost:5286");
+// Escuchar en 0.0.0.0 (todas las interfaces) para que sea accesible desde internet
+app.Run($"http://0.0.0.0:{port}");
 
 public record CitaRequest(string Nombre, string DNI, string Telefono, string Email, string Dia, string Horario, string Motivo);
