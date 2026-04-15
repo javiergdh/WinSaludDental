@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros Tratamientos | WIN SALUD DENTAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde: #558D42;
+            --verde-claro: #f0f7ee;
+            --verde-vibrante: #72b35a;
+            --amarillo: #ffde59;
+            --oscuro: #1a252f;
+            --radio: 30px;
+            --sombra: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        * { transition: all 0.3s ease; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background-color: #ffffff; color: var(--oscuro); overflow-x: hidden; }
+        h1, h2, h3, .logo-text { font-family: 'Bubblegum Sans', cursive; }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
+            background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 15px; }
+        .logo-text { font-size: 2rem; color: var(--verde); }
+        .video-logo-nav { height: 60px; border-radius: 15px; }
+        
+        .nav-menu { display: flex; align-items: center; gap: 25px; }
+        .nav-link { text-decoration: none; color: var(--oscuro); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        .nav-link:hover { color: var(--verde); }
+        .btn-reservar { background: var(--verde-vibrante); color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 800; }
+
+        /* --- HERO SERVICIOS --- */
+        .hero-services {
+            background: var(--verde-claro);
+            padding: 80px 10%;
+            text-align: center;
+            border-radius: 0 0 100px 100px;
+        }
+        .hero-services h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
+
+        /* --- GRID DE SERVICIOS OPTIMIZADO --- */
+        .services-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 5%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 30px;
+            border: 2px solid #f0f7ee;
+            text-align: center;
+            width: calc(20% - 20px); 
+            min-width: 250px;     
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--verde);
+            box-shadow: var(--sombra);
+        }
+
+        .service-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+        
+        .service-card h3 { color: var(--verde); font-size: 1.6rem; margin: 10px 0; }
+        
+        .service-card p { 
+            font-size: 0.95rem; 
+            color: #555; 
+            line-height: 1.6; 
+            margin-bottom: 25px; 
+            flex-grow: 1; 
+        }
+
+        .service-price {
+            background: var(--amarillo);
+            color: var(--oscuro);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: inline-block;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        /* --- BANNER FINAL --- */
+        .promo-banner {
+            background: var(--verde-claro);
+            padding: 50px 10%;
+            text-align: center;
+            margin: 40px 10% 80px 10%;
+            border-radius: var(--radio);
+            border: 3px dashed var(--verde);
+        }
+
+        footer { 
+            background: var(--verde); 
+            color: white; 
+            text-align: center; 
+            padding: 60px 10%; 
+            border-radius: 80px 80px 0 0; 
+        }
+        @media (max-width: 1400px) {
+            .service-card {
+                width: calc(33.33% - 20px); /* 3 por fila */
+            }
+        }
+
+        @media (max-width: 800px) {
+            .service-card {
+                width: calc(50% - 20px); /* 2 por fila */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <video autoplay loop muted playsinline class="video-logo-nav">
+                <source src="LogoAnimado.mp4" type="video/mp4">
+            </video>
+            <div class="logo-text">WIN SALUD DENTAL</div>
+        </div>
+        <div class="nav-menu">
+            <a href="Win Salud Dental.html" class="nav-link">Inicio</a>
+            <a href="servicios.html" class="nav-link" style="color: var(--verde);">Tratamientos</a>
+            <a href="Win Salud Dental.html#contacto" class="nav-link">Contacto</a>
+            <a href="Win Salud Dental.html" class="btn-reservar">RESERVAR</a>
+        </div>
+    </nav>
+
+    <section class="hero-services">
+        <h1>Nuestros Tratamientos</h1>
+        <p style="font-size: 1.2rem; max-width: 600px; margin: 20px auto;">Descubre cómo cuidamos la sonrisa de los valientes de la casa con la tecnología más divertida.</p>
+    </section>
+
+    <section class="services-grid">
+        <div class="service-card">
+            <span class="service-icon">✨</span>
+            <h3>Limpieza + Flúor</h3>
+            <p>Protección total contra las caries para que sus dientes brillen como estrellas.</p>
+            <span class="service-price">Desde 45€</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🍼</span>
+            <h3>Odontobebés</h3>
+            <p>Acompañamos la salida de sus primeros dientes desde los 0 años con ternura.</p>
+            <span class="service-price">1ª Visita Gratis</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🛡️</span>
+            <h3>Selladores</h3>
+            <p>Una barrera invisible en las muelas para evitar que la comida se quede atrapada.</p>
+            <span class="service-price">30€ / pieza</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🦷</span>
+            <h3>Empaste Pediátrico</h3>
+            <p>Reparamos sus dientecitos de leche de forma rápida y sin dolor.</p>
+            <span class="service-price">Desde 50€</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">⚡</span>
+            <h3>Pulpotomía</h3>
+            <p>Tratamiento especializado para salvar el nervio de los dientes de leche.</p>
+            <span class="service-price">90€</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">☁️</span>
+            <h3>Cero Miedo (Sedación)</h3>
+            <p>Para tratamientos complejos o peques muy nerviosos, usamos aire mágico relajante.</p>
+            <span class="service-price">Consultar</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">⛓️</span>
+            <h3>Brackets Juveniles</h3>
+            <p>Ortodoncia clásica de alta calidad para alinear su sonrisa de forma definitiva.</p>
+            <span class="service-price">Desde 1800€</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🌈</span>
+            <h3>Aparatos de Crecimiento</h3>
+            <p>Guiamos el crecimiento de sus maxilares para una sonrisa perfecta en el futuro.</p>
+            <span class="service-price">Desde 800€</span>
+        </div>
+
+        <div class="service-card">
+            <span class="service-icon">🧚</span>
+            <h3>Mantenedor de Espacio</h3>
+            <p>Para que los dientes definitivos salgan en su lugar si se cae uno antes de tiempo.</p>
+            <span class="service-price">100€</span>
+        </div>
+    </section>
+
+    <div class="promo-banner">
+        <h2 style="color: var(--verde); margin-top: 0; font-size: 2.5rem;">¿Es su primera vez?</h2>
+        <p style="font-size: 1.3rem;">Recuerda que la <strong>primera visita y el diagnóstico son GRATIS</strong>.</p>
+        <p style="font-size: 1rem; color: #555; margin-top: 10px;">Si tienes alguna duda consultalo con nuestro Asistente Virtual</p>
+        <a href="Win Salud Dental.html" class="btn-reservar" style="display: inline-block; margin-top: 20px; padding: 20px 40px; font-size: 1.2rem;">¡QUIERO MI CITA GRATIS!</a>
+    </div>
+
+    <footer>
+        <h2 style="font-size: 2.5rem; margin-bottom: 10px;">WIN SALUD DENTAL</h2>
+        <p>Calle Mayor 12, Madrid | Tel: 656 55 39 57 | Email: javiergdh26@gmail.com</p>
+        <p style="margin-top: 40px; opacity: 0.8; font-size: 0.8rem;">© 2026 - Sonrisas para el futuro</p>
+    </footer>
+
+</body>
+</html>

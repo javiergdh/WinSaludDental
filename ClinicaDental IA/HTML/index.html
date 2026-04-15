@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIN SALUD DENTAL | Clínica Dental Infantil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde: #558D42;
+            --verde-claro: #f0f7ee;
+            --verde-vibrante: #72b35a;
+            --rojo-validación: #e74c3c;
+            --amarillo: #ffde59;
+            --oscuro: #1a252f;
+            --radio: 30px;
+            --sombra: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        * { transition: all 0.3s ease; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background-color: #ffffff; color: var(--oscuro); overflow-x: hidden; }
+        h1, h2, h3, .logo-text { font-family: 'Bubblegum Sans', cursive; }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
+            background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 15px; }
+        .logo-text { font-size: 2rem; color: var(--verde); letter-spacing: 1px; }
+        .video-logo-nav { height: 60px; border-radius: 15px; }
+        
+        .nav-menu { display: flex; align-items: center; gap: 25px; }
+        .nav-link { text-decoration: none; color: var(--oscuro); font-weight: 800; font-size: 0.9rem; text-transform: uppercase; cursor: pointer; }
+        .nav-link:hover { color: var(--verde); }
+
+        .btn-reserva-nav { 
+            background: var(--verde); color: white; padding: 12px 30px; border-radius: 50px; 
+            cursor: pointer; font-weight: 800; box-shadow: 0 6px 0px var(--verde-vibrante);
+            border: none;
+        }
+
+        /* --- HERO CON VÍDEO --- */
+        .hero {
+            position: relative;
+            height: 70vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            text-align: center; 
+            border-radius: 0 0 100px 100px;
+            overflow: hidden; 
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .hero-content { 
+            position: relative;
+            z-index: 1;
+            background: rgba(255,255,255,0.85); 
+            padding: 40px; 
+            border-radius: var(--radio); 
+            border: 4px dashed var(--verde); 
+        }
+        .hero h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
+
+        /* --- TRATAMIENTOS --- */
+        .grid-fun { padding: 60px 10%; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .fun-card { background: var(--verde-claro); padding: 40px; border-radius: var(--radio); text-align: center; text-decoration: none; color: inherit; border: 3px solid transparent; }
+        .fun-card:hover { border-color: var(--verde); transform: rotate(-2deg); }
+        .fun-card i { font-size: 3rem; display: block; margin-bottom: 10px; }
+
+        /* --- VALIDACIÓN FRANJA LATERAL --- */
+        .input-container { position: relative; margin-bottom: 15px; width: 100%; }
+        .input-container::before {
+            content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 8px; background-color: var(--rojo-validación);
+            border-radius: 15px 0 0 15px; z-index: 5;
+        }
+        .input-container.valido::before { background-color: var(--verde); }
+
+        .form-input { 
+            width: 100%; padding: 15px 15px 15px 25px; border: 2px solid #eee; 
+            border-radius: 15px; font-size: 1rem; font-family: 'Outfit';
+        }
+        .form-input.valido { border-color: var(--verde); background: #f0fdf4; }
+
+        /* --- WHATSAPP Y CHAT --- */
+        .whatsapp-float {
+            position: fixed; bottom: 30px; left: 30px; z-index: 2000;
+            background: #25d366; width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        #chat-widget { position: fixed; bottom: 30px; right: 30px; z-index: 2000; }
+        #chat-button { background: var(--amarillo); width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 3px solid var(--verde); }
+        #chat-window { position: absolute; bottom: 90px; right: 0; width: 340px; height: 480px; background: white; border-radius: var(--radio); display: none; flex-direction: column; box-shadow: var(--sombra); border: 3px solid var(--verde); overflow: hidden; }
+        #chat-header { background: var(--verde); color: white; padding: 15px; font-weight: bold; font-family: 'Bubblegum Sans'; font-size: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+        .close-chat { cursor: pointer; font-size: 1.5rem; }
+        #chatlog { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #fff; }
+
+        /* --- MODAL --- */
+        #modalFormulario { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(85, 141, 66, 0.4); backdrop-filter: blur(8px); }
+        .modal-content { background: white; margin: 3vh auto; border-radius: var(--radio); width: 90%; max-width: 550px; border: 5px solid var(--verde); max-height: 94vh; overflow-y: auto; position: relative; }
+        
+        footer { background: var(--verde); color: white; text-align: center; padding: 40px; border-radius: 80px 80px 0 0; }
+
+        /* --- SECCIÓN DE RESEÑAS --- */
+        .reviews-section { padding: 60px 10%; background-color: white; text-align: center; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px; }
+        .review-card { background: var(--verde-claro); padding: 30px; border-radius: var(--radio); border: 2px dashed var(--verde); position: relative; }
+        .review-card i { color: var(--amarillo); font-size: 1.2rem; display: block; margin-bottom: 10px; }
+        .review-text { font-style: italic; font-size: 1.1rem; color: var(--oscuro); margin-bottom: 15px; }
+        .review-author { font-weight: 800; color: var(--verde); text-transform: uppercase; font-size: 0.9rem; }
+
+        /* --- ESTILOS ADMIN --- */
+        #modalAdmin { display: none; position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(26, 37, 47, 0.8); backdrop-filter: blur(4px); }
+        .modal-admin-content { background: white; margin: 20vh auto; padding: 30px; border-radius: var(--radio); width: 90%; max-width: 400px; text-align: center; border: 4px solid var(--amarillo); }
+        .btn-admin { display: none; background: var(--oscuro); color: white; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 800; border: none; font-size: 0.8rem; margin-left: 10px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <video autoplay loop muted playsinline class="video-logo-nav">
+                <source src="vid/LogoAnimado.mp4" type="video/mp4">
+            </video>
+            <div class="logo-text">WIN SALUD DENTAL</div>
+        </div>
+        <div class="nav-menu">
+            <a href="Win Salud Dental.html" class="nav-link">Inicio</a>
+            <a href="servicios.html" class="nav-link">Tratamientos</a>
+            <a href="instalaciones.html" class="nav-link">Instalaciones</a>
+            <div class="btn-reserva-nav" onclick="abrirForm()">MI SALUD 💡</div>
+            <button class="btn-admin" onclick="abrirAdmin()">⚙️ ADMIN</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <video autoplay loop muted playsinline class="video-bg">
+            <source src="vid/Principal.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1>¡Una aventura para tu sonrisa!</h1>
+            <p>La clínica donde los niños vienen a jugar y salen con dientes brillantes.</p>
+            <button class="btn-reserva-nav" onclick="abrirForm()" style="font-size:1.2rem; padding: 20px 40px;">¡PEDIR MI CITA!</button>
+        </div>
+    </header>
+
+    <section class="grid-fun">
+        <a href="servicios.html" class="fun-card">
+            <i>🦖</i>
+            <h3>Cero Miedo</h3>
+            <p>Ver Tratamientos Especializados</p>
+        </a>
+        <a href="instalaciones.html" class="fun-card">
+            <i>🎈</i>
+            <h3>Zona de Juegos</h3>
+            <p>Conoce nuestras instalaciones</p>
+        </a>
+        <a href="servicios.html" class="fun-card">
+            <i>🦷</i>
+            <h3>Dientes Fuertes</h3>
+            <p>Odontopediatría avanzada</p>
+        </a>
+    </section>
+
+    <section class="reviews-section">
+        <h2 style="color: var(--verde); font-size: 2.5rem; margin-bottom: 10px;">¡Lo que dicen las superfamilias!</h2>
+        <div class="reviews-grid">
+            <div class="review-card">
+                <i>⭐⭐⭐⭐⭐</i>
+                <p class="review-text">"¡Increíble! Mi hijo solía tener pánico al dentista y ahora pregunta cuándo volvemos a jugar. La atención es excelente."</p>
+                <p class="review-author">— Mamá de Lucas</p>
+            </div>
+            <div class="review-card">
+                <i>⭐⭐⭐⭐⭐</i>
+                <p class="review-text">"Excelente clínica. El trato es súper profesional y las instalaciones están pensadas 100% para que los niños se sientan en un parque de juegos."</p>
+                <p class="review-author">— Papá de Valeria</p>
+            </div>
+        </div>
+    </section>
+
+    <a href="https://wa.me/34656553957" class="whatsapp-float" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="35">
+    </a>
+
+    <div id="modalFormulario">
+        <div class="modal-content">
+            <div style="background:var(--verde); color:white; padding:20px; text-align:center;">
+                <h2 style="margin:0">🗓️ Gestión de Citas</h2>
+                <span onclick="cerrarForm()" style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:2rem;">&times;</span>
+            </div>
+            <div style="padding:30px;">
+                <form id="reservaForm">
+                    <div class="input-container"><input type="text" id="f_nombre" placeholder="Nombre del menor..." class="form-input"></div>
+                    <div class="input-container"><input type="text" id="f_dni" placeholder="DNI de padre/madre/tutor..." class="form-input"></div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="input-container" style="flex:1;"><input type="tel" id="f_tel" placeholder="Teléfono" class="form-input"></div>
+                        <div class="input-container" style="flex:1;"><input type="email" id="f_email" placeholder="Email" class="form-input"></div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="input-container" style="flex:1;"><input type="date" id="f_dia" onchange="validarFecha(this)" class="form-input"></div>
+                        <div class="input-container" style="flex:1;"><input type="time" id="f_hora" class="form-input"></div>
+                    </div>
+                    <div class="input-container"><input type="text" id="f_motivo" placeholder="¿Qué necesita?" class="form-input"></div>
+                    <button type="button" id="btnAgendar" onclick="agendarCita()" style="width:100%; background:var(--verde); color:white; border:none; padding:18px; border-radius:15px; font-weight:800; cursor:pointer; font-size:1.2rem;">CONFIRMAR CITA</button>
+                </form>
+                <hr style="margin: 30px 0; border: 1px dashed #ddd;">
+                <h3 style="color:var(--verde)">🔍 Consultar mis citas</h3>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="g_dni" placeholder="DNI del tutor" class="form-input" style="margin-bottom:0">
+                    <button onclick="buscarCitas()" style="background:var(--verde); color:white; border:none; padding:0 20px; border-radius:15px; cursor:pointer; font-weight:bold;">BUSCAR</button>
+                </div>
+                <div id="listaCitas" style="margin-top:15px; font-size:0.9rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-widget">
+        <div id="chat-window">
+            <div id="chat-header">
+                Winni - Tu Asistente Dental 🦷
+                <span class="close-chat" onclick="toggleChat()">&times;</span>
+            </div>
+            <div id="chatlog">
+                <div style="background:#eee; padding:12px; border-radius:15px; align-self:flex-start;">¡Hola! Soy Winni. ¿Quieres pedir una cita o tienes alguna duda?</div>
+            </div>
+            <div style="padding:15px; border-top:2px solid var(--verde-claro); display:flex; gap:10px;">
+                <input type="text" id="userInput" placeholder="Escribe aquí..." style="flex:1; border:none; outline:none;" onkeypress="if(event.key==='Enter') enviarMensaje()">
+                <button onclick="enviarMensaje()" style="background:var(--verde); color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer;">➔</button>
+            </div>
+        </div>
+        <div id="chat-button" onclick="toggleChat()"><span style="font-size:30px;">🦁</span></div>
+    </div>
+
+    <div id="modalAdmin">
+        <div class="modal-admin-content">
+            <h2 style="color: var(--oscuro)">Acceso Clínica</h2>
+            <p>Introduce la contraseña de administrador:</p>
+            <input type="password" id="adminPass" class="form-input" style="text-align: center; margin-bottom: 20px;" placeholder="****">
+            <div style="display: flex; gap: 10px;">
+                <button onclick="cerrarAdmin()" style="flex:1; background:#eee; border:none; padding:15px; border-radius:15px; cursor:pointer;">Cancelar</button>
+                <button onclick="validarAdmin()" style="flex:1; background:var(--amarillo); border:none; padding:15px; border-radius:15px; cursor:pointer; font-weight:800;">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <h2>WIN SALUD DENTAL</h2>
+        <p>Calle Mayor 12, Madrid | Tel: 656 55 39 57 | Email: javiergdh26@gmail.com</p>
+        <p style="margin-top: 40px; opacity: 0.8; font-size: 0.8rem;">© 2026 - Sonrisas para el futuro</p>
+    </footer>
+
+    <script>
+        const API_BBDD = "http://localhost:5286";
+        const FESTIVOS = ["2026-01-01", "2026-01-06", "2026-05-01", "2026-10-12", "2026-12-25"];
+
+        window.onload = () => {
+            const hoy = new Date().toISOString().split('T')[0];
+            const inputFecha = document.getElementById('f_dia');
+            if(inputFecha) inputFecha.setAttribute('min', hoy);
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.addEventListener('input', () => validarInputRealTime(input));
+            });
+        };
+
+        function validarInputRealTime(input) {
+            let esValido = false;
+            const valor = input.value.trim();
+            const contenedor = input.parentElement;
+            switch (input.id) {
+                case 'f_nombre': case 'f_motivo': esValido = valor.length >= 3; break;
+                case 'f_dni': esValido = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i.test(valor); break;
+                case 'f_tel': esValido = /^\d{9}$/.test(valor); break;
+                case 'f_email': esValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor); break;
+                case 'f_dia': esValido = valor !== ""; break;
+                case 'f_hora': esValido = checkRestriccionesHora(valor); break;
+                default: esValido = valor !== "";
+            }
+            if (esValido) { contenedor.classList.add('valido'); input.classList.add('valido'); }
+            else { contenedor.classList.remove('valido'); input.classList.remove('valido'); }
+        }
+
+        function checkRestriccionesHora(horaStr) {
+            if (!horaStr) return false;
+            const [horas, minutos] = horaStr.split(':').map(Number);
+            if (minutos !== 0 && minutos !== 30) return false;
+            return ((horas >= 10 && horas < 14) || (horas >= 16 && horas < 20));
+        }
+
+        function validarFecha(input) {
+            const fecha = new Date(input.value);
+            const diaSemana = fecha.getUTCDay(); 
+            if (diaSemana === 0 || diaSemana === 6 || FESTIVOS.includes(input.value)) {
+                alert("La clínica está cerrada los fines de semana y festivos.");
+                input.value = "";
+                input.parentElement.classList.remove('valido');
+            } else { validarInputRealTime(input); }
+        }
+
+        function toggleChat() {
+            const win = document.getElementById('chat-window');
+            win.style.display = (win.style.display === "none" || win.style.display === "") ? "flex" : "none";
+        }
+        function abrirForm() { document.getElementById('modalFormulario').style.display = 'block'; }
+        function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
+
+        async function enviarMensaje() {
+            const input = document.getElementById('userInput');
+            const box = document.getElementById('chatlog');
+            if(!input.value) return;
+            const userText = input.value;
+            box.innerHTML += `<div style="background:var(--verde); color:white; padding:10px; border-radius:15px; align-self:flex-end;">${userText}</div>`;
+            input.value = '';
+            
+            try {
+                const res = await fetch('/chat', { 
+                    method: 'POST', headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify({ mensaje: userText }) 
+                });
+                const data = await res.json();
+                let r = data.respuesta;
+                if(r.includes("[Abrir Formulario]")) {
+                    r = r.replace("[Abrir Formulario]", `<br><button onclick="abrirForm()" class="btn-reserva-nav" style="padding:5px 15px; margin-top:5px; font-size:0.8rem;">ABRIR GESTIÓN</button>`);
+                }
+                box.innerHTML += `<div style="background:#f0f0f0; padding:10px; border-radius:15px; align-self:flex-start;">${r}</div>`;
+            } catch(e) { 
+                box.innerHTML += `<div style="background:#eee; padding:10px; border-radius:15px; align-self:flex-start;">¡Hola! Un asistente te atenderá en breve.</div>`; 
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function agendarCita() {
+            const form = document.getElementById('reservaForm');
+            const btn = document.getElementById('btnAgendar');
+            if (form.querySelectorAll('.form-input:not(.valido)').length > 0) {
+                return alert("Por favor, rellena todos los campos correctamente.");
+            }
+            const diaValue = document.getElementById('f_dia').value;
+            const horaValue = document.getElementById('f_hora').value;
+            btn.innerText = "PROCESANDO...";
+            btn.disabled = true;
+
+            try {
+                const resCheck = await fetch(`${API_BBDD}/verificar-disponibilidad?dia=${diaValue}&hora=${horaValue}`);
+                const disponibilidad = await resCheck.json();
+                if (!disponibilidad.disponible) {
+                    alert("Ese horario ya está ocupado.");
+                    btn.innerText = "CONFIRMAR CITA";
+                    btn.disabled = false;
+                    return;
+                }
+                const campos = {
+                    Nombre: document.getElementById('f_nombre').value,
+                    DNI: document.getElementById('f_dni').value,
+                    Telefono: document.getElementById('f_tel').value,
+                    Email: document.getElementById('f_email').value,
+                    Dia: diaValue,
+                    Horario: horaValue,
+                    Motivo: document.getElementById('f_motivo').value,
+                    Estado: "Pendiente"
+                };
+                const res = await fetch(`${API_BBDD}/agendar-cita`, { 
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'}, 
+                    body: JSON.stringify(campos) 
+                });
+                if(res.ok) { 
+                    alert("¡Cita agendada correctamente!"); 
+                    cerrarForm(); 
+                    form.reset(); 
+                    document.querySelectorAll('.input-container, .form-input').forEach(el => el.classList.remove('valido'));
+                } else {
+                    alert("Error al guardar la cita en el sistema.");
+                }
+            } catch(e) { 
+                alert("No se pudo conectar con el servidor. Asegúrate de que el programa de la clínica esté abierto."); 
+            } finally {
+                btn.innerText = "CONFIRMAR CITA";
+                btn.disabled = false;
+            }
+        }
+
+        async function buscarCitas() {
+            const dni = document.getElementById('g_dni').value;
+            if(!dni) return alert("Introduce el DNI del tutor.");
+            try {
+                const res = await fetch(`${API_BBDD}/consultar-citas/${dni}`);
+                const citas = await res.json();
+                const lista = document.getElementById('listaCitas');
+                lista.innerHTML = citas.length > 0 
+                    ? citas.map(c => {
+                        const f = c.Fecha || c.Dia || "---";
+                        const h = c.Hora || c.Horario || "---";
+                        return `
+                        <div style="border-bottom:1px solid #eee; padding:10px 0; display:flex; justify-content:space-between; align-items:center;">
+                            <div><strong>📅 ${f} a las ${h}</strong><br><small>${c.Motivo || "Consulta"}</small></div>
+                            <button onclick="cancelarCita('${c.CitaID || c.id}', '${dni}')" 
+                                    style="background:var(--rojo-validación); color:white; border:none; padding:5px 10px; border-radius:10px; cursor:pointer; font-size:0.8rem; font-weight:800;">
+                                CANCELAR
+                            </button>
+                        </div>`;
+                    }).join('')
+                    : "<p>No tienes citas pendientes.</p>";
+            } catch(e) { 
+                alert("Error al conectar con la base de datos."); 
+            }
+        }
+
+        async function cancelarCita(idCita, dni) {
+            if (!confirm("¿Seguro que quieres cancelar esta cita?")) return;
+            try {
+                const res = await fetch(`${API_BBDD}/eliminar-cita/${idCita}`, { method: 'DELETE' });
+                if (res.ok) {
+                    alert("Cita cancelada correctamente.");
+                    buscarCitas();
+                } else {
+                    alert("No se pudo cancelar la cita.");
+                }
+            } catch (e) {
+                alert("Error de conexión al intentar cancelar.");
+            }
+        }
+
+        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
+        function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; document.getElementById('adminPass').value = ''; }
+
+        function validarAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === 'admin123') {
+                window.location.href = 'administracion.html';
+            } else {
+                alert("Contraseña incorrecta. Solo personal autorizado.");
+                document.getElementById('adminPass').value = '';
+            }
+        }
+
+        window.onclick = function(event) {
+            const modalCita = document.getElementById('modalFormulario');
+            const modalAdmin = document.getElementById('modalAdmin');
+            if (event.target == modalCita) cerrarForm();
+            if (event.target == modalAdmin) cerrarAdmin();
+        }
+
+        const IP_CLINICA = "92.176.183.12";
+        async function verificarRedYMostrarBoton() {
+            try {
+                const respuesta = await fetch('https://api.ipify.org?format=json');
+                const datos = await respuesta.json();
+                const miBotonAdmin = document.querySelector('.btn-admin');
+                if (datos.ip === IP_CLINICA) {
+                    miBotonAdmin.style.display = 'inline-block';
+                } else {
+                    miBotonAdmin.style.display = 'none';
+                }
+            } catch (error) {
+                console.log("No se pudo verificar la red, el botón permanecerá oculto.");
+            }
+        }
+        verificarRedYMostrarBoton();
+    </script>
+</body>
+</html>

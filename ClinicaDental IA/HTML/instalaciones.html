@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Clínica | WIN SALUD DENTAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --verde: #558D42;
+            --verde-claro: #f0f7ee;
+            --amarillo: #ffde59;
+            --oscuro: #1a252f;
+            --radio: 30px;
+        }
+
+        * { transition: all 0.3s ease; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; margin: 0; background-color: #ffffff; color: var(--oscuro); }
+        h1, h2, h3, .logo-text { font-family: 'Bubblegum Sans', cursive; }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
+            background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .nav-logo { display: flex; align-items: center; gap: 15px; }
+        .logo-text { font-size: 2rem; color: var(--verde); }
+        .video-logo-nav { height: 60px; border-radius: 15px; }
+        
+        .nav-menu { display: flex; align-items: center; gap: 25px; }
+        .nav-link { text-decoration: none; color: var(--oscuro); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
+        .btn-reservar { background: #72b35a; color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 800; }
+
+        /* --- HERO --- */
+        .hero-inst {
+            background: var(--verde-claro);
+            padding: 60px 10%;
+            text-align: center;
+            border-radius: 0 0 100px 100px;
+        }
+        .hero-inst h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
+
+        /* --- GALERÍA DE INSTALACIONES  --- */
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 60px 8%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-card {
+            background: white;
+            border-radius: var(--radio);
+            overflow: hidden;
+            border: 2px solid var(--verde-claro);
+            width: calc(20% - 25px); /* 5 por fila */
+            min-width: 260px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--verde);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .gallery-info {
+            padding: 20px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .gallery-info h3 { margin: 0 0 10px 0; color: var(--verde); font-size: 1.4rem; }
+        .gallery-info p { margin: 0; font-size: 0.9rem; color: #666; line-height: 1.4; }
+
+        /* --- SECCIÓN MAPA --- */
+        .map-section {
+            padding: 40px 10% 80px;
+            text-align: center;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background: #eee;
+            border-radius: var(--radio);
+            margin-top: 30px;
+            border: 5px solid var(--verde-claro);
+            overflow: hidden;
+        }
+
+        footer { background: var(--verde); color: white; text-align: center; padding: 60px; border-radius: 80px 80px 0 0; }
+
+        @media (max-width: 1200px) { .gallery-card { width: calc(33.33% - 25px); } }
+        @media (max-width: 768px) { .gallery-card { width: calc(50% - 25px); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">
+            <video autoplay loop muted playsinline class="video-logo-nav">
+                <source src="LogoAnimado.mp4" type="video/mp4">
+            </video>
+            <div class="logo-text">WIN SALUD DENTAL</div>
+        </div>
+        <div class="nav-menu">
+            <a href="Win Salud Dental.html" class="nav-link">Inicio</a>
+            <a href="servicios.html" class="nav-link">Tratamientos</a>
+            <a href="instalaciones.html" class="nav-link" style="color: var(--verde);">Instalaciones</a>
+            <a href="Win Salud Dental.html" class="btn-reservar">RESERVAR</a>
+        </div>
+    </nav>
+
+    <section class="hero-inst">
+        <h1>Explora nuestro mundo</h1>
+        <p>Un espacio diseñado para que los niños se sientan en su lugar favorito.</p>
+    </section>
+
+    <div class="gallery-container">
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/zonaJuegos.png');"></div>
+            <div class="gallery-info">
+                <h3>Zona de Juegos</h3>
+                <p>Consolas, cuentos y colores para que la espera sea parte de la diversión.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Consulta.png');"></div>
+            <div class="gallery-info">
+                <h3>Consulta Estelar</h3>
+                <p>Equipada con pantallas en el techo durante los tratamientos.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Recepcion.png');"></div>
+            <div class="gallery-info">
+                <h3>Recepción</h3>
+                <p>Donde comienza la aventura con una sonrisa de nuestro equipo.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Bebes.png');"></div>
+            <div class="gallery-info">
+                <h3>Rincón de Bebés</h3>
+                <p>Un espacio tranquilo y cómodo para los más pequeños.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/RayosX.png');"></div>
+            <div class="gallery-info">
+                <h3>Rayos X</h3>
+                <p>Tecnología de última generación que parece de ciencia ficción.</p>
+            </div>
+        </div>
+
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Pasillos.png');"></div>
+            <div class="gallery-info">
+                <h3>Pasillos de Colores</h3>
+                <p>Cada puerta es una nueva aventura por descubrir.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Laboratorio.png');"></div>
+            <div class="gallery-info">
+                <h3>Laboratorio Win</h3>
+                <p>Máxima higiene y seguridad bajo los estándares más estrictos.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Padres.png');"></div>
+            <div class="gallery-info">
+                <h3>Zona de Padres</h3>
+                <p>Café y wifi para que tú también estés relajado mientras esperamos.</p>
+            </div>
+        </div>
+        <div class="gallery-card">
+            <div class="gallery-img" style="background-image: url('img/Fachada.png');"></div>
+            <div class="gallery-info">
+                <h3>Fachada Win</h3>
+                <p>¡Fácil de encontrar! Estamos en pleno corazón de la ciudad.</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="map-section">
+        <h2>¿Dónde estamos?</h2>
+        <p>Visítanos en Calle Mayor 12, Madrid. ¡No tiene pérdida!</p>
+        <div class="map-container">
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.603348842456!2d-3.7082728!3d40.415363!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42287e076722d7%3A0x633190e38686940!2sCalle%20Mayor%2C%2012%2C%2028013%20Madrid!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses" 
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <footer>
+        <h2>WIN SALUD DENTAL</h2>
+        <p>Calle Mayor 12, Madrid | Tel: 656 55 39 57 | Email: javiergdh26@gmail.com</p>
+        <p style="margin-top: 30px; opacity: 0.7;">© 2026 - Sonrisas para el futuro</p>
+    </footer>
+
+</body>
+</html>
