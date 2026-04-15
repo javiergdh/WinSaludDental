@@ -57,7 +57,7 @@ GUÍA DE RESPUESTAS ADAPTADA:
 let historialConversacion = [{ role: "system", content: SYSTEM_PROMPT }];
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'HTML', 'Win Salud Dental.html')); 
+    res.sendFile(path.join(__dirname, 'HTML', 'index.html')); 
 });
 
 app.post('/chat', async (req, res) => {
@@ -67,7 +67,7 @@ app.post('/chat', async (req, res) => {
 
         const chatRes = await groq.chat.completions.create({
             messages: historialConversacion,
-            model: "llama-3.3-70b-versatile", // El modelo que sí funciona en Groq
+            model: "llama-3.3-70b-versatile",
             temperature: 0.1
         });
 
@@ -75,7 +75,8 @@ app.post('/chat', async (req, res) => {
         historialConversacion.push({ role: 'assistant', content: botReply });
         res.json({ respuesta: botReply });
     } catch (error) {
-        res.status(500).json({ respuesta: "Lo siento, usa el botón: [Abrir Formulario]" });
+        console.error(error); // Esto te ayudará a ver el error real en la consola
+        res.status(500).json({ respuesta: "Error de conexión con el asistente." });
     }
 });
 
