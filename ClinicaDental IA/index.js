@@ -81,8 +81,8 @@ app.post('/chat', async (req, res) => {
 });
 
 // En tu index.js de la IA
-const PORT = process.env.PORT || 3000; // Railway usará process.env.PORT
-
+// Reemplaza app.listen(3000...) por esto:
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor funcionando en el puerto ${PORT}`);
+    console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
