@@ -396,8 +396,8 @@
     function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
 
     async function enviarMensaje() {
-        const input = document.getElementById('userInput'); // ID correcto según tu HTML
-        const box = document.getElementById('chatlog');    // ID correcto según tu HTML
+        const input = document.getElementById('userInput'); 
+        const box = document.getElementById('chatlog');    
         const msg = input.value.trim();
 
         if (!msg) return;
@@ -410,18 +410,30 @@
         box.scrollTop = box.scrollHeight;
 
         try {
-            // Usar la URL de tu servidor de Node (IA)
+            // Usar la URL de tu servidor de Node (IA) en Railway
             const res = await fetch(`https://ia-production-fc36.up.railway.app/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mensaje: msg })
             });
-            const data = await res.json();
             
-            box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
+            const data = await res.json();
+            const respuestaBot = data.respuesta;
+
+            // Mostrar mensaje del bot
+            box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${respuestaBot}</span></div>`;
+
+            // --- LÓGICA PARA ABRIR EL FORMULARIO ---
+            if (respuestaBot.includes("[Abrir Formulario]")) {
+                // Llamamos a la función que ya tienes definida en tu HTML para mostrar el modal
+                abrirForm(); 
+            }
+            // ---------------------------------------
+
         } catch (e) {
             box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ Error de conexión con Winni.</div>`;
         }
+        
         box.scrollTop = box.scrollHeight;
     }
 
