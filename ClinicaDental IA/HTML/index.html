@@ -396,34 +396,31 @@
     function cerrarForm() { document.getElementById('modalFormulario').style.display = 'none'; }
 
     async function enviarMensaje() {
-        const input = document.getElementById('chatInput');
-        const box = document.getElementById('chatBox');
+        const input = document.getElementById('userInput'); // ID correcto según tu HTML
+        const box = document.getElementById('chatlog');    // ID correcto según tu HTML
         const msg = input.value.trim();
 
         if (!msg) return;
 
-        // Mostrar mensaje usuario
+        // Mostrar mensaje del usuario
         box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
         input.value = '';
         
-        // Feedback de "escribiendo..."
-        const loadingId = "loading-" + Date.now();
-        box.innerHTML += `<div id="${loadingId}" style="text-align:left; margin:10px;"><span style="background:#eee; color:#999; padding:10px 15px; border-radius:20px; display:inline-block;">Winni está escribiendo...</span></div>`;
+        // Scroll al final
         box.scrollTop = box.scrollHeight;
 
         try {
-            const res = await fetch(`${API_BBDD}/chat`, {
+            // Usar la URL de tu servidor de Node (IA)
+            const res = await fetch(`https://ia-production-fc36.up.railway.app/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ mensaje: msg })
             });
             const data = await res.json();
             
-            document.getElementById(loadingId).remove();
             box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${data.respuesta}</span></div>`;
         } catch (e) {
-            if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
-            box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ Error de conexión.</div>`;
+            box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ Error de conexión con Winni.</div>`;
         }
         box.scrollTop = box.scrollHeight;
     }
@@ -540,17 +537,18 @@
     }
 
     async function verificarRedYMostrarBoton() {
+
         const IP_CLINICA = "92.176.183.12";
         try {
             const respuesta = await fetch('https://api.ipify.org?format=json');
             const datos = await respuesta.json();
             const miBotonAdmin = document.querySelector('.btn-admin');
             if (miBotonAdmin) {
-                miBotonAdmin.style.display = (datos.ip === IP_CLINICA) ? 'inline-block' : 'none';
+                miBotonAdmin.style.display = 'inline-block'; // Forzar visibilidad
             }
-        } catch (error) {
-            console.log("Modo remoto: Botón admin oculto.");
-        }
+        } catch (error) {}
+
+        document.querySelector('.btn-admin').style.display = 'inline-block';
     }
 
     // Cerrar modales al hacer clic fuera
@@ -559,6 +557,12 @@
             cerrarForm();
             cerrarAdmin();
         }
+    }
+    function abrirAdmin() {
+    document.getElementById('modalAdmin').style.display = 'block';
+    }
+    function cerrarAdmin() {
+        document.getElementById('modalAdmin').style.display = 'none';
     }
 </script>
 </body>
