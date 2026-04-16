@@ -406,11 +406,9 @@
         box.innerHTML += `<div style="text-align:right; margin:10px;"><span style="background:var(--verde); color:white; padding:10px 15px; border-radius:20px; display:inline-block;">${msg}</span></div>`;
         input.value = '';
         
-        // Scroll al final
         box.scrollTop = box.scrollHeight;
 
         try {
-            // Usar la URL de tu servidor de Node (IA) en Railway
             const res = await fetch(`https://ia-production-fc36.up.railway.app/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -418,17 +416,24 @@
             });
             
             const data = await res.json();
-            const respuestaBot = data.respuesta;
+            let respuestaBot = data.respuesta;
 
-            // Mostrar mensaje del bot
-            box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${respuestaBot}</span></div>`;
-
-            // --- LÓGICA PARA ABRIR EL FORMULARIO ---
+            // --- LÓGICA DEL BOTÓN VERDE ---
+            // Reemplazamos el texto [Abrir Formulario] por un botón real de HTML
             if (respuestaBot.includes("[Abrir Formulario]")) {
-                // Llamamos a la función que ya tienes definida en tu HTML para mostrar el modal
-                abrirForm(); 
+                const botonHTML = `
+                    <br><br>
+                    <button onclick="abrirForm()" style="background-color: var(--verde); color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        📅 Agendar Cita Ahora
+                    </button>`;
+                
+                // Cambiamos el texto plano por el texto con el botón
+                respuestaBot = respuestaBot.replace("[Abrir Formulario]", botonHTML);
             }
-            // ---------------------------------------
+            // ------------------------------
+
+            // Mostrar mensaje del bot (ahora puede incluir el botón)
+            box.innerHTML += `<div style="text-align:left; margin:10px;"><span style="background:#eee; color:#333; padding:10px 15px; border-radius:20px; display:inline-block;">${respuestaBot}</span></div>`;
 
         } catch (e) {
             box.innerHTML += `<div style="text-align:left; margin:10px; color:red; font-size:0.8rem;">⚠️ Error de conexión con Winni.</div>`;
