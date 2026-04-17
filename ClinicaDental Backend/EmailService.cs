@@ -5,8 +5,8 @@ using System.Threading.Tasks; // <--- ESTO FALTA: Necesario para usar 'Task'
 public class EmailService
 {
     // Usa tus datos reales aquí como hiciste en el otro archivo
-    private readonly string _emailEmisor = "javiergdh26@gmail.com";
-    private readonly string _passwordApp = "xqcg bdcz ulmg crys"; 
+    private readonly string _emailEmisor = Environment.GetEnvironmentVariable("SMTP_EMAIL") ?? "javiergdh26@gmail.com";
+    private readonly string _passwordApp = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "xqcg bdcz ulmg crys";
 
     public async Task EnviarConfirmacionCita(string emailDestino, string nombre, string fecha, string hora)
     {
