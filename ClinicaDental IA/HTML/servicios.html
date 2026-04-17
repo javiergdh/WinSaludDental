@@ -20,7 +20,6 @@
         body { font-family: 'Outfit', sans-serif; margin: 0; background-color: #ffffff; color: var(--oscuro); overflow-x: hidden; }
         h1, h2, h3, .logo-text { font-family: 'Bubblegum Sans', cursive; }
 
-        /* --- NAVEGACIÓN --- */
         nav {
             padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
             background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
@@ -34,7 +33,6 @@
         .nav-link:hover { color: var(--verde); }
         .btn-reservar { background: var(--verde-vibrante); color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 800; }
 
-        /* --- HERO SERVICIOS --- */
         .hero-services {
             background: var(--verde-claro);
             padding: 80px 10%;
@@ -43,7 +41,6 @@
         }
         .hero-services h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
 
-        /* --- GRID DE SERVICIOS OPTIMIZADO --- */
         .services-grid {
             display: flex;
             flex-wrap: wrap;
@@ -98,7 +95,6 @@
             margin: 0 auto;
         }
 
-        /* --- BANNER FINAL --- */
         .promo-banner {
             background: var(--verde-claro);
             padding: 50px 10%;
@@ -117,25 +113,23 @@
         }
         @media (max-width: 1400px) {
             .service-card {
-                width: calc(33.33% - 20px); /* 3 por fila */
+                width: calc(33.33% - 20px);
             }
         }
 
         @media (max-width: 800px) {
             .service-card {
-                width: calc(50% - 20px); /* 2 por fila */
+                width: calc(50% - 20px);
             }
         }
-        /* --- AJUSTE MAESTRO RESPONSIVE --- */
         @media (max-width: 768px) {
-            /* Bloqueo de desbordamiento lateral */
+
             html, body {
                 overflow-x: hidden;
                 width: 100%;
                 position: relative;
             }
 
-            /* BARRA DE NAVEGACIÓN: División en dos filas */
             nav {
                 flex-direction: column !important;
                 padding: 15px 5% !important;
@@ -144,26 +138,24 @@
                 justify-content: center !important;
             }
 
-            /* Contenedor del Logo (Título) */
             nav .logo {
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 width: 100% !important;
-                margin-bottom: 10px; /* Separa el logo de los enlaces */
+                margin-bottom: 10px;
                 text-align: center;
             }
 
             .logo-text {
-                font-size: 1.8rem !important; /* Un poco más pequeño para que no rompa */
+                font-size: 1.8rem !important;
                 white-space: nowrap;
-                margin: 0 auto !important; /* Centrado absoluto */
+                margin: 0 auto !important;
             }
 
-            /* ENLACES: Segunda fila */
             .nav-links {
                 display: flex !important;
-                flex-wrap: wrap !important; /* Si no caben, se dividen solos */
+                flex-wrap: wrap !important;
                 justify-content: center !important;
                 gap: 10px !important;
                 width: 100% !important;
@@ -172,18 +164,16 @@
             .nav-links a {
                 font-size: 0.85rem !important;
                 padding: 6px 10px !important;
-                background: var(--verde-claro); /* Les da un toque de botón para móvil */
+                background: var(--verde-claro);
                 border-radius: 15px;
             }
 
-            /* CHATBOT: Forzar su posición */
             .chat-bubble {
                 right: 15px !important;
                 bottom: 15px !important;
                 z-index: 9999 !important;
             }
 
-            /* TRATAMIENTOS / SERVICIOS: Centrado */
             .services-grid, .gallery-grid {
                 display: flex !important;
                 flex-direction: column !important;
@@ -197,9 +187,8 @@
                 margin: 0 auto 20px auto !important;
             }
 
-            /* Ajuste para páginas sin video de logo */
             nav .logo video {
-                display: none !important; /* Ocultamos video en móvil si estorba */
+                display: none !important;
             }
         }
     </style>

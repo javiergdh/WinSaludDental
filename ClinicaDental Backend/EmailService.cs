@@ -1,10 +1,9 @@
-using MailKit.Net.Smtp; // Para el cliente de correo
-using MimeKit;           // Para crear el mensaje
-using System.Threading.Tasks; // <--- ESTO FALTA: Necesario para usar 'Task'
+using MailKit.Net.Smtp;
+using MimeKit;
+using System.Threading.Tasks;
 
 public class EmailService
 {
-    // Usa tus datos reales aquí como hiciste en el otro archivo
     private readonly string _emailEmisor = Environment.GetEnvironmentVariable("SMTP_EMAIL") ?? "javiergdh26@gmail.com";
     private readonly string _passwordApp = Environment.GetEnvironmentVariable("SMTP_PASSWORD") ?? "xqcg bdcz ulmg crys";
 
@@ -102,7 +101,6 @@ public class EmailService
         await EnviarCorreoAsync(mensaje);
     }
 
-    // Método auxiliar para no repetir código de conexión
     private async Task EnviarCorreoAsync(MimeMessage mensaje) {
         using var client = new SmtpClient();
         try {
@@ -110,7 +108,6 @@ public class EmailService
             await client.AuthenticateAsync(_emailEmisor, _passwordApp);
             await client.SendAsync(mensaje);
         } catch (Exception ex) {
-            // Esto evita que la app explote si falla el mail
             Console.WriteLine($"[SMTP ERROR] {ex.Message}");
         } finally {
             await client.DisconnectAsync(true);

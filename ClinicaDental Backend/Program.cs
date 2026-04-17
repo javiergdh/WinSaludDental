@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar logs básicos
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddCors();
 builder.Services.AddSingleton<EmailService>();
 
-// --- MEJORA 1: ESTO EVITA EL 'UNDEFINED' EN EL TELÉFONO ---
-// Hace que a la API no le importe si el JS manda "telefono" o "Telefono"
 builder.Services.ConfigureHttpJsonOptions(options => {
     options.SerializerOptions.PropertyNameCaseInsensitive = true;
 });
@@ -20,7 +17,6 @@ var app = builder.Build();
 
 app.UseCors(p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
-// --- CONFIGURACIÓN DE BASE DE DATOS ---
 string dbDirectory = "/app/data";
 string dbPath = Directory.Exists(dbDirectory) 
     ? Path.Combine(dbDirectory, "clinicaWin.db") 
@@ -28,7 +24,7 @@ string dbPath = Directory.Exists(dbDirectory)
 
 string connectionString = $"Data Source={dbPath}";
 
-// Lógica de borrado opcional (solo si activas la variable en Railway)
+
 if (Environment.GetEnvironmentVariable("BORRAR_DB") == "true") {
     if (File.Exists(dbPath)) File.Delete(dbPath);
 }
@@ -54,8 +50,6 @@ try {
 } catch (Exception ex) {
     Console.WriteLine($"[LOG ERROR] {ex.Message}");
 }
-
-// --- ENDPOINTS ---
 
 app.MapGet("/", () => Results.Ok("API Operativa"));
 
@@ -106,8 +100,6 @@ app.MapPost("/agendar-cita", async (CitaRequest request, EmailService emailServi
         await cmdVin.ExecuteNonQueryAsync();
 
         trans.Commit();
-
-        // --- MEJORA 2: EMAIL EN SEGUNDO PLANO PARA NO COLGAR LA WEB ---
         _ = Task.Run(async () => {
             try {
                 await emailService.EnviarConfirmacionCita(request.Email, request.Nombre, request.Dia, request.Horario);
@@ -123,7 +115,6 @@ app.MapPost("/agendar-cita", async (CitaRequest request, EmailService emailServi
     }
 });
 
-// --- TU LÓGICA DE CONSULTA Y GESTIÓN SE MANTIENE INTACTA ---
 
 app.MapGet("/consultar-citas/{dni}", async (string dni) => {
     using var conn = new SqliteConnection(connectionString);
@@ -138,12 +129,11 @@ app.MapGet("/consultar-citas/{dni}", async (string dni) => {
     cmd.Parameters.AddWithValue("@dni", dni);
     using var reader = await cmd.ExecuteReaderAsync();
     var citas = new List<object>();
-// Dentro de app.MapGet("/consultar-citas/{dni}", ...)
     while (await reader.ReadAsync()) {
         citas.Add(new { 
             id = reader.GetInt32(0), 
-            Fecha = reader.GetString(1),  // Usamos 'Fecha' con Mayúscula
-            Hora = reader.GetString(2),   // Usamos 'Hora' con Mayúscula
+            Fecha = reader.GetString(1),
+            Hora = reader.GetString(2),
             Motivo = reader.GetString(3) 
         });
     }

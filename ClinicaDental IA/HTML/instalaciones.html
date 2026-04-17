@@ -18,7 +18,6 @@
         body { font-family: 'Outfit', sans-serif; margin: 0; background-color: #ffffff; color: var(--oscuro); }
         h1, h2, h3, .logo-text { font-family: 'Bubblegum Sans', cursive; }
 
-        /* --- NAVEGACIÓN --- */
         nav {
             padding: 1rem 8%; display: flex; justify-content: space-between; align-items: center;
             background: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
@@ -31,7 +30,6 @@
         .nav-link { text-decoration: none; color: var(--oscuro); font-weight: 800; text-transform: uppercase; font-size: 0.9rem; }
         .btn-reservar { background: #72b35a; color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: 800; }
 
-        /* --- HERO --- */
         .hero-inst {
             background: var(--verde-claro);
             padding: 60px 10%;
@@ -39,8 +37,6 @@
             border-radius: 0 0 100px 100px;
         }
         .hero-inst h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
-
-        /* --- GALERÍA DE INSTALACIONES  --- */
         .gallery-container {
             display: flex;
             flex-wrap: wrap;
@@ -56,7 +52,7 @@
             border-radius: var(--radio);
             overflow: hidden;
             border: 2px solid var(--verde-claro);
-            width: calc(20% - 25px); /* 5 por fila */
+            width: calc(20% - 25px);
             min-width: 260px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.02);
             display: flex;
@@ -86,7 +82,6 @@
         .gallery-info h3 { margin: 0 0 10px 0; color: var(--verde); font-size: 1.4rem; }
         .gallery-info p { margin: 0; font-size: 0.9rem; color: #666; line-height: 1.4; }
 
-        /* --- SECCIÓN MAPA --- */
         .map-section {
             padding: 40px 10% 80px;
             text-align: center;
@@ -106,16 +101,14 @@
 
         @media (max-width: 1200px) { .gallery-card { width: calc(33.33% - 25px); } }
         @media (max-width: 768px) { .gallery-card { width: calc(50% - 25px); } }
-        /* --- AJUSTE MAESTRO RESPONSIVE --- */
         @media (max-width: 768px) {
-            /* Bloqueo de desbordamiento lateral */
+
             html, body {
                 overflow-x: hidden;
                 width: 100%;
                 position: relative;
             }
 
-            /* BARRA DE NAVEGACIÓN: División en dos filas */
             nav {
                 flex-direction: column !important;
                 padding: 15px 5% !important;
@@ -124,26 +117,24 @@
                 justify-content: center !important;
             }
 
-            /* Contenedor del Logo (Título) */
             nav .logo {
                 display: flex !important;
                 align-items: center !important;
                 justify-content: center !important;
                 width: 100% !important;
-                margin-bottom: 10px; /* Separa el logo de los enlaces */
+                margin-bottom: 10px;
                 text-align: center;
             }
 
             .logo-text {
-                font-size: 1.8rem !important; /* Un poco más pequeño para que no rompa */
+                font-size: 1.8rem !important;
                 white-space: nowrap;
-                margin: 0 auto !important; /* Centrado absoluto */
+                margin: 0 auto !important;
             }
 
-            /* ENLACES: Segunda fila */
             .nav-links {
                 display: flex !important;
-                flex-wrap: wrap !important; /* Si no caben, se dividen solos */
+                flex-wrap: wrap !important;
                 justify-content: center !important;
                 gap: 10px !important;
                 width: 100% !important;
@@ -152,18 +143,16 @@
             .nav-links a {
                 font-size: 0.85rem !important;
                 padding: 6px 10px !important;
-                background: var(--verde-claro); /* Les da un toque de botón para móvil */
+                background: var(--verde-claro);
                 border-radius: 15px;
             }
 
-            /* CHATBOT: Forzar su posición */
             .chat-bubble {
                 right: 15px !important;
                 bottom: 15px !important;
                 z-index: 9999 !important;
             }
 
-            /* TRATAMIENTOS / SERVICIOS: Centrado */
             .services-grid, .gallery-grid {
                 display: flex !important;
                 flex-direction: column !important;
@@ -177,9 +166,9 @@
                 margin: 0 auto 20px auto !important;
             }
 
-            /* Ajuste para páginas sin video de logo */
+
             nav .logo video {
-                display: none !important; /* Ocultamos video en móvil si estorba */
+                display: none !important;
             }
         }
     </style>
