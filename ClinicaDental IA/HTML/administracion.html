@@ -201,7 +201,11 @@
                 <div id="resultados-busqueda" style="max-height: 400px; overflow-y: auto; border-top: 2px solid var(--verde-claro); padding-top: 15px;">
                     </div>
             </div>
-
+            <div style="margin-bottom: 20px;">
+                <button onclick="exportarCitasCSV()" style="background-color: #27ae60; color: white; padding: 12px 25px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);">
+                    📥 Descargar Listado (Excel/CSV)
+                </button>
+            </div>
             <div class="panel-admin">
                 <h2>📅 Agendar Nueva Cita</h2>
                 <form id="reservaForm">
@@ -462,6 +466,48 @@
             }
         } catch (e) { alert("Error de conexión"); }
         finally { btn.innerText = "✨ REGISTRAR CITA"; btn.disabled = false; }
+    }
+    function exportarCitasCSV() {
+        // 1. Seleccionamos las filas de la tabla (ajusta el ID si es diferente)
+        const tabla = document.getElementById("tablaCitas");
+        const filas = tabla.querySelectorAll("tr");
+        
+        if (filas.length <= 1) {
+            alert("No hay citas para exportar.");
+            return;
+        }
+
+        let csvContent = "\uFEFF"; // BOM para que Excel reconozca tildes y eñes
+        
+        // 2. Definimos las cabeceras manualmente
+        csvContent += "Nombre,DNI,Teléfono,Email,Día,Horario,Motivo,Estado\n";
+
+        // 3. Recorremos las filas (saltando la cabecera de la tabla HTML)
+        for (let i = 1; i < filas.length; i++) {
+            const celdas = filas[i].querySelectorAll("td");
+            
+            // Extraemos el texto de cada celda, limpiando espacios
+            // Usamos slice(0, -1) para no incluir la última columna de "Acciones" (botones)
+            const datos = Array.from(celdas)
+                .slice(0, -1) 
+                .map(celda => `"${celda.innerText.trim()}"`) 
+                .join(",");
+                
+            csvContent += datos + "\n";
+        }
+
+        // 4. Creamos el archivo y forzamos la descarga
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        
+        const fecha = new Date().toLocaleDateString().replace(/\//g, '-');
+        link.setAttribute("href", url);
+        link.setAttribute("download", `Citas_WinSaludDental_${fecha}.csv`);
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 </script>
 </body>
