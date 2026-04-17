@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control | WIN SALUD DENTAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;800&family=Bubblegum+Sans&display=swap" rel="stylesheet">
     <style>
@@ -73,61 +74,73 @@
             align-items: center;
             font-size: 0.85rem;
         }
-        /* --- ADAPTABILIDAD PARA MÓVILES --- */
+        /* --- RESPONSIVE DESIGN: SE ADAPTA A MÓVILES --- */
         @media (max-width: 768px) {
-            /* Ajuste de Navegación */
+            /* Ajuste de Navegación y Logo */
             nav {
-                padding: 1rem 5%;
                 flex-direction: column;
-                gap: 10px;
+                padding: 1rem 5%;
+                text-align: center;
+                gap: 15px;
             }
-
+            
             .nav-links {
-                display: none; /* Opcional: ocultar links en móvil o dejarlos en columna */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
             }
 
-            /* Ajuste de Hero y Secciones */
-            .hero h1 {
-                font-size: 2.5rem !important;
-            }
-
-            .container, section {
+            /* Contenedores y Secciones */
+            .container, .agenda-container, .hero {
                 padding: 20px 5% !important;
+                width: 100% !important;
+            }
+
+            /* Grillas: Servicios e Instalaciones (Se ponen en 1 sola columna) */
+            .services-grid, .gallery-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+            }
+
+            /* Hero Section (Ajuste de textos) */
+            .hero h1 { font-size: 2.8rem !important; }
+            .hero p { font-size: 1.1rem !important; }
+
+            /* Panel de Administración y Tablas */
+            .agenda-header-box {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .tabla-container {
+                overflow-x: auto; /* Permite scroll lateral si la tabla no cabe */
+                border-radius: 15px;
+            }
+
+            table {
+                min-width: 700px; /* Evita que los datos de la tabla se amontonen */
             }
 
             /* Formularios y Modales */
             .modal-content {
                 width: 95% !important;
-                margin: 10% auto;
-                padding: 20px !important;
+                margin: 10px auto;
+                padding: 20px;
             }
 
-            /* Cuadrículas (Grids) a una sola columna */
-            .servicios-grid, .gallery-grid {
-                grid-template-columns: 1fr !important;
+            input, select, textarea, .btn-agendar {
+                width: 100% !important;
+                font-size: 16px !important; /* Mejora la escritura en móviles */
             }
 
-            /* Botones más grandes para dedos */
-            .btn-reservar, .btn-admin {
-                width: 100%;
-                text-align: center;
-                margin: 5px 0;
-            }
-
-            /* Tabla de Administración (Scroll lateral) */
-            .tabla-container {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 600px; /* Permite deslizar la tabla si es muy ancha */
-            }
-
-            /* Ajuste de la sección Consultar Citas */
-            .cita-item {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
+            /* Botones flotantes (WhatsApp/Chat) */
+            .chat-bubble {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
             }
         }
     </style>
@@ -230,7 +243,6 @@
 
         </div>
     </div>
-
 <script>
     const API_URL = "https://api-production-0da0.up.railway.app";
     const FESTIVOS = ["2026-01-01", "2026-01-06", "2026-05-01", "2026-10-12", "2026-12-25"];
