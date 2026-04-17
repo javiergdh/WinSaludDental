@@ -467,46 +467,51 @@
         } catch (e) { alert("Error de conexión"); }
         finally { btn.innerText = "✨ REGISTRAR CITA"; btn.disabled = false; }
     }
-    function exportarAgendaHoy() {
-        // 1. Buscamos todas las tarjetas de cita en la agenda de hoy
-        const citasMañana = document.querySelectorAll("#agenda-mañana .cita-card");
-        const citasTarde = document.querySelectorAll("#agenda-tarde .cita-card");
-        const todasLasCitas = [...citasMañana, ...citasTarde];
-
-        if (todasLasCitas.length === 0) {
-            alert("No hay citas programadas para hoy en la agenda.");
-            return;
-        }
-
-        let csvContent = "\uFEFF"; // Para que Excel lea bien tildes y eñes
-        csvContent += "Horario,Paciente,DNI,Motivo\n";
-
-        // 2. Extraer datos de cada tarjeta
-        todasLasCitas.forEach(card => {
-            const hora = card.querySelector(".cita-hora")?.innerText || "";
-            const nombre = card.querySelector("strong")?.innerText || "";
-            const infoExtra = card.querySelector("p")?.innerText || "";
+    async function exportarAgendaHoy() {
+        try {
+            // 1. Obtenemos la fecha de hoy en formato YYYY-MM-DD
+            const hoy = new Date().toISOString().split('T')[0];
             
-            // El DNI y Motivo suelen estar en el párrafo, intentamos separarlos
-            // infoExtra suele ser algo como "DNI: 12345678X | Motivo: Limpieza"
-            const partes = infoExtra.split("|");
-            const dni = partes[0]?.replace("DNI:", "").trim() || "";
-            const motivo = partes[1]?.replace("Motivo:", "").trim() || "";
+            // 2. Llamamos a tu API usando el nombre REAL de tu endpoint
+            // Cambiamos /obtener-citas por /consultar-todas-las-citas
+            const res = await fetch(`${API_URL}/consultar-todas-las-citas`);
+            
+            if (!res.ok) throw new Error("No se pudieron obtener las citas");
+            
+            const todasLasCitas = await res.json();
 
-            csvContent += `"${hora}","${nombre}","${dni}","${motivo}"\n`;
-        });
+            // 3. Filtramos solo las que son de hoy
+            // Importante: tu API devuelve 'fecha' en minúscula
+            const citasHoy = todasLasCitas.filter(c => c.fecha === hoy);
 
-        // 3. Crear y descargar el archivo
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        const fecha = new Date().toLocaleDateString().replace(/\//g, '-');
-        
-        link.setAttribute("href", url);
-        link.setAttribute("download", `Agenda_WinSalud_Hoy_${fecha}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+            if (citasHoy.length === 0) {
+                alert("No hay citas registradas para hoy (" + hoy + ") en la base de datos.");
+                return;
+            }
+
+            // 4. Creamos el CSV
+            let csvContent = "\uFEFF"; // BOM para acentos
+            csvContent += "Horario,Paciente,DNI,Teléfono,Email,Motivo,Estado\n";
+
+            citasHoy.forEach(c => {
+                // Usamos los nombres de campos que devuelve tu API (nombre, dni, telefono, etc.)
+                csvContent += `"${c.horario}","${c.nombre}","${c.dni}","${c.telefono}","${c.email}","${c.motivo}","${c.estado}"\n`;
+            });
+
+            // 5. Descarga
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Agenda_Hoy_${hoy}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+        } catch (error) {
+            console.error("Error al exportar:", error);
+            alert("Error al conectar con la API. Asegúrate de que los servicios están activos.");
+        }
     }
 </script>
 </body>
