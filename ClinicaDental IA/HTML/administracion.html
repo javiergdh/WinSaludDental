@@ -165,12 +165,11 @@
                 <button onclick="cargarCitas()" style="background: var(--amarillo); border: none; padding: 10px; border-radius: 50%; cursor: pointer;">🔄</button>
             </div>
         </div>
-        <div style="margin-bottom: 20px;">
-            <button onclick="exportarCitas()" style="background-color: #27ae60; color: white; padding: 12px 25px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.2);">
-                📥 Descargar Listado (Excel/CSV)
+        <div>
+            <button onclick="exportarAgendaHoy()" style="background-color: #27ae60; color: white; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                📥 Descargar Agenda de Hoy
             </button>
         </div>
-
         <div class="tabla-citas">
             <div class="fila fila-header">
                 <div>HORA</div>
@@ -468,35 +467,43 @@
         } catch (e) { alert("Error de conexión"); }
         finally { btn.innerText = "✨ REGISTRAR CITA"; btn.disabled = false; }
     }
-    function exportarCitas() {
-        // Importante: El ID debe coincidir con el de tu tabla (línea 61)
-        const filas = document.querySelectorAll("#tablaCitas tr");
-        
-        if (filas.length <= 1) {
-            alert("No hay citas para exportar.");
+    function exportarAgendaHoy() {
+        // 1. Buscamos todas las tarjetas de cita en la agenda de hoy
+        const citasMañana = document.querySelectorAll("#agenda-mañana .cita-card");
+        const citasTarde = document.querySelectorAll("#agenda-tarde .cita-card");
+        const todasLasCitas = [...citasMañana, ...citasTarde];
+
+        if (todasLasCitas.length === 0) {
+            alert("No hay citas programadas para hoy en la agenda.");
             return;
         }
 
-        let csvContent = "\uFEFF"; // Esto permite que Excel lea bien las tildes
-        csvContent += "Nombre,DNI,Teléfono,Email,Día,Horario,Motivo,Estado\n";
+        let csvContent = "\uFEFF"; // Para que Excel lea bien tildes y eñes
+        csvContent += "Horario,Paciente,DNI,Motivo\n";
 
-        for (let i = 1; i < filas.length; i++) {
-            const celdas = filas[i].querySelectorAll("td");
-            // slice(0, -1) elimina la columna de los botones de "Borrar/Completada"
-            const datos = Array.from(celdas)
-                .slice(0, -1) 
-                .map(celda => `"${celda.innerText.trim()}"`) 
-                .join(",");
-            csvContent += datos + "\n";
-        }
+        // 2. Extraer datos de cada tarjeta
+        todasLasCitas.forEach(card => {
+            const hora = card.querySelector(".cita-hora")?.innerText || "";
+            const nombre = card.querySelector("strong")?.innerText || "";
+            const infoExtra = card.querySelector("p")?.innerText || "";
+            
+            // El DNI y Motivo suelen estar en el párrafo, intentamos separarlos
+            // infoExtra suele ser algo como "DNI: 12345678X | Motivo: Limpieza"
+            const partes = infoExtra.split("|");
+            const dni = partes[0]?.replace("DNI:", "").trim() || "";
+            const motivo = partes[1]?.replace("Motivo:", "").trim() || "";
 
+            csvContent += `"${hora}","${nombre}","${dni}","${motivo}"\n`;
+        });
+
+        // 3. Crear y descargar el archivo
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         const fecha = new Date().toLocaleDateString().replace(/\//g, '-');
         
         link.setAttribute("href", url);
-        link.setAttribute("download", `Citas_WinSalud_${fecha}.csv`);
+        link.setAttribute("download", `Agenda_WinSalud_Hoy_${fecha}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
