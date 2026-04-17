@@ -74,79 +74,74 @@
             align-items: center;
             font-size: 0.85rem;
         }
-        /* --- RESPONSIVE DESIGN: SE ADAPTA A MÓVILES --- */
-        /* --- SOLUCIÓN DEFINITIVA PARA MÓVIL --- */
+        /* --- AJUSTE DEFINITIVO PARA BARRA Y CENTRADO --- */
         @media (max-width: 768px) {
-            /* Forzar que nada se salga de la pantalla */
-            html, body {
-                overflow-x: hidden;
-                width: 100%;
-                position: relative;
-            }
-
-            /* Navegación: Apilar elementos */
-            nav {
-                flex-direction: column !important;
-                padding: 15px !important;
-                height: auto !important;
-            }
-
-            .nav-links {
-                margin-top: 15px;
-                gap: 10px !important;
-                justify-content: center;
-            }
-
-            /* Contenedores: Quitar márgenes laterales grandes */
-            .container, .agenda-container {
-                padding: 20px 15px !important;
-                width: 100% !important;
+            /* Forzamos que nada pueda medir más que la pantalla */
+            * {
+                max-width: 100vw;
                 box-sizing: border-box;
             }
 
-            /* Grillas: 1 sola columna obligatorio */
+            body {
+                overflow-x: hidden;
+                width: 100%;
+            }
+
+            /* BARRA DE NAVEGACIÓN: Corregir que se corte */
+            nav {
+                flex-direction: column !important;
+                padding: 15px 0 !important; /* Quitamos padding lateral excesivo */
+                height: auto !important;
+                width: 100% !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .nav-links {
+                display: flex !important;
+                flex-direction: row !important; /* Enlaces en fila pero ajustables */
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                width: 100% !important;
+                padding: 0 10px;
+                gap: 8px !important;
+                margin-top: 10px;
+            }
+
+            .nav-links a {
+                font-size: 0.9rem !important;
+                padding: 5px 8px !important;
+            }
+
+            /* TRATAMIENTOS Y GRIDS: Forzar centrado total */
             .services-grid, .gallery-grid {
                 display: flex !important;
                 flex-direction: column !important;
-                grid-template-columns: none !important;
-                gap: 20px !important;
+                align-items: center !important; /* Centra las tarjetas horizontalmente */
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 0 auto !important;
+                padding: 0 15px !important;
             }
 
-            /* Ajuste de la sección Hero (Index) */
+            .service-card, .gallery-card {
+                width: 100% !important;
+                max-width: 350px !important; /* Limita el ancho para que no se vea gigante */
+                margin-bottom: 20px !important;
+                transform: none !important; /* Evita que animaciones las desplacen */
+            }
+
+            /* Contenedores generales */
+            .container, .agenda-container {
+                padding: 20px 10px !important;
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            /* Ajuste para que el Hero (Index) no empuje la barra */
             .hero {
                 padding: 40px 15px !important;
-                text-align: center;
-            }
-
-            .hero h1 { font-size: 2.2rem !important; }
-
-            /* Administración: El buscador y la tabla */
-            .agenda-header-box {
-                flex-direction: column !important;
-                padding: 15px !important;
-                gap: 15px !important;
-            }
-
-            .search-box {
-                width: 100% !important;
-            }
-
-            /* Hacer que la tabla se pueda mover de lado sin romper el diseño */
-            .tabla-container {
-                display: block;
-                width: 100%;
-                overflow-x: auto; /* Scroll horizontal solo para la tabla */
-                -webkit-overflow-scrolling: touch;
-            }
-
-            table {
-                width: 100%;
-                min-width: 600px; /* Asegura que los datos no se aplasten */
-            }
-
-            /* Imágenes de instalaciones */
-            .gallery-img {
-                height: 200px !important;
+                margin-top: 0 !important;
             }
         }
     </style>
