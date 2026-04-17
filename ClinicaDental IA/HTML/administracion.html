@@ -153,23 +153,24 @@
     </nav>
 
     <div class="container">
-        <div class="agenda-header-box">
+        <div class="agenda-header-box" style="display: flex; justify-content: space-between; align-items: center;">
             <div class="agenda-info">
                 <h1>Agenda del Día</h1>
                 <p id="fecha-actual"></p>
             </div>
-            <div style="display: flex; gap: 20px; align-items: center;">
+            
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button onclick="exportarAgendaHoy()" style="background-color: #27ae60; color: white; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(39, 174, 96, 0.2);">
+                    📥 Descargar Excel
+                </button>
+
                 <div style="background: var(--verde); color: white; padding: 10px 25px; border-radius: 15px; font-weight: 800;">
                     <span id="num-citas">0</span> Citas Hoy
                 </div>
                 <button onclick="cargarCitas()" style="background: var(--amarillo); border: none; padding: 10px; border-radius: 50%; cursor: pointer;">🔄</button>
             </div>
         </div>
-        <div>
-            <button onclick="exportarAgendaHoy()" style="background-color: #27ae60; color: white; padding: 10px 20px; border-radius: 12px; border: none; cursor: pointer; font-family: 'Outfit', sans-serif; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                📥 Descargar Agenda de Hoy
-            </button>
-        </div>
+
         <div class="tabla-citas">
             <div class="fila fila-header">
                 <div>HORA</div>
@@ -203,9 +204,9 @@
                 <button class="btn-accion btn-buscar" onclick="limpiarBuscador()" style="margin-bottom: 20px; background: #666;">LIMPIAR FILTROS</button>
 
                 <div id="resultados-busqueda" style="max-height: 400px; overflow-y: auto; border-top: 2px solid var(--verde-claro); padding-top: 15px;">
-                    </div>
+                </div>
             </div>
- 
+
             <div class="panel-admin">
                 <h2>📅 Agendar Nueva Cita</h2>
                 <form id="reservaForm">
