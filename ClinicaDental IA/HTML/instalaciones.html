@@ -37,6 +37,7 @@
             border-radius: 0 0 100px 100px;
         }
         .hero-inst h1 { font-size: 3.5rem; color: var(--verde); margin: 0; }
+
         .gallery-container {
             display: flex;
             flex-wrap: wrap;
@@ -65,12 +66,13 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
         }
 
-        .gallery-img {
+        /* Ajuste para que el video ocupe el espacio de la imagen */
+        .gallery-video {
             width: 100%;
             height: 200px;
+            object-fit: cover; /* Esto hace que el video llene el espacio sin deformarse */
             background-color: #ddd;
-            background-size: cover;
-            background-position: center;
+            display: block;
         }
 
         .gallery-info {
@@ -100,77 +102,11 @@
         footer { background: var(--verde); color: white; text-align: center; padding: 60px; border-radius: 80px 80px 0 0; }
 
         @media (max-width: 1200px) { .gallery-card { width: calc(33.33% - 25px); } }
-        @media (max-width: 768px) { .gallery-card { width: calc(50% - 25px); } }
-        @media (max-width: 768px) {
-
-            html, body {
-                overflow-x: hidden;
-                width: 100%;
-                position: relative;
-            }
-
-            nav {
-                flex-direction: column !important;
-                padding: 15px 5% !important;
-                height: auto !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-
-            nav .logo {
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                margin-bottom: 10px;
-                text-align: center;
-            }
-
-            .logo-text {
-                font-size: 1.8rem !important;
-                white-space: nowrap;
-                margin: 0 auto !important;
-            }
-
-            .nav-links {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                gap: 10px !important;
-                width: 100% !important;
-            }
-
-            .nav-links a {
-                font-size: 0.85rem !important;
-                padding: 6px 10px !important;
-                background: var(--verde-claro);
-                border-radius: 15px;
-            }
-
-            .chat-bubble {
-                right: 15px !important;
-                bottom: 15px !important;
-                z-index: 9999 !important;
-            }
-
-            .services-grid, .gallery-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                padding: 10px !important;
-            }
-
-            .service-card {
-                width: 90% !important;
-                max-width: 320px !important;
-                margin: 0 auto 20px auto !important;
-            }
-
-
-            nav .logo video {
-                display: none !important;
-            }
+        @media (max-width: 768px) { 
+            .gallery-card { width: calc(50% - 25px); }
+            .hero-inst h1 { font-size: 2.5rem; }
         }
+        @media (max-width: 480px) { .gallery-card { width: 100%; } }
     </style>
 </head>
 <body>
@@ -196,36 +132,51 @@
     </section>
 
     <div class="gallery-container">
+        
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/zonaJuegos.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/zonaJuegos.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Zona de Juegos</h3>
                 <p>Consolas, cuentos y colores para que la espera sea parte de la diversión.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Consulta.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Consulta.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Consulta Estelar</h3>
                 <p>Equipada con pantallas en el techo durante los tratamientos.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Recepcion.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Recepcion.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Recepción</h3>
                 <p>Donde comienza la aventura con una sonrisa de nuestro equipo.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Bebes.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Bebes.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Rincón de Bebés</h3>
                 <p>Un espacio tranquilo y cómodo para los más pequeños.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/RayosX.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/RayosX.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Rayos X</h3>
                 <p>Tecnología de última generación que parece de ciencia ficción.</p>
@@ -233,33 +184,45 @@
         </div>
 
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Pasillos.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Pasillos.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Pasillos de Colores</h3>
                 <p>Cada puerta es una nueva aventura por descubrir.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Laboratorio.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Laboratorio.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Laboratorio Win</h3>
                 <p>Máxima higiene y seguridad bajo los estándares más estrictos.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Padres.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Padres.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Zona de Padres</h3>
                 <p>Café y wifi para que tú también estés relajado mientras esperamos.</p>
             </div>
         </div>
+
         <div class="gallery-card">
-            <div class="gallery-img" style="background-image: url('img/Fachada.png');"></div>
+            <video class="gallery-video" autoplay loop muted playsinline>
+                <source src="vid/Fachada.mp4" type="video/mp4">
+            </video>
             <div class="gallery-info">
                 <h3>Fachada Win</h3>
                 <p>¡Fácil de encontrar! Estamos en pleno corazón de la ciudad.</p>
             </div>
         </div>
+
     </div>
 
     <section class="map-section">
@@ -267,7 +230,7 @@
         <p>Visítanos en Calle Mayor 12, Madrid. ¡No tiene pérdida!</p>
         <div class="map-container">
             <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.603348842456!2d-3.7082728!3d40.415363!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd42287e076722d7%3A0x633190e38686940!2sCalle%20Mayor%2C%2012%2C%2028013%20Madrid!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3037.668228306068!2d-3.7057!3d40.4167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDI1JzAwLjEiTiAzwrA0MicyMC41Ilc!5e0!3m2!1ses!2ses!4v1620000000000!5m2!1ses!2ses" 
                 width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
             </iframe>
         </div>
