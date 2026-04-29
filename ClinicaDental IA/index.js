@@ -8,7 +8,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'HTML')));
- //AQUI ES DONDE SE PONEN LAS ESPECIFICACIONES DEL ASISTENTE, REGLAS DE INTERACCIÓN, ESTILO DE COMUNICACIÓN Y LA TABLA DE PRECIOS. ES IMPORTANTE QUE SEAN CLARAS Y DETALLADAS.
+
 const SYSTEM_PROMPT = `
 Eres el asistente virtual de Win Salud Dental, una clínica especializada exclusivamente en odontopediatría de niños de 0 a 12 años. Tu misión es asistir a los padres y tutores con un tono profesional, cercano y tranquilizador. Debes transmitir seguridad: los niños están en las mejores manos, en un entorno diseñado para que su experiencia sea positiva y sin miedo.
 
@@ -91,7 +91,7 @@ app.post('/chat', async (req, res) => {
         historialConversacion.push({ role: 'assistant', content: botReply });
         res.json({ respuesta: botReply });
     } catch (error) {
-        console.error(error); // Esto te ayudará a ver el error real en la consola
+        console.error(error);
         res.status(500).json({ respuesta: "Error de conexión con el asistente." });
     }
 });
